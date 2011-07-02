@@ -1,0 +1,2726 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GSMCommunication</name>
+    </assembly>
+    <members>
+        <member name="T:GsmComm.GsmCommunication.OperatorFormat">
+            <summary>
+            Contains the possible formats in which a network operator can be returned.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorFormat.LongFormatAlphanumeric">
+            <summary>Long format, alphanumeric</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorFormat.ShortFormatAlphanumeric">
+            <summary>Short format, alphanumeric</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorFormat.Numeric">
+            <summary>
+            Numeric format, GSM Location Area Identification number (BCD encoded, 3 digits country code,
+            2 digits network code)
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageIndicationSettings">
+            <summary>
+            Specifies the settings for new message notifications.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSettings.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the structure.
+            </summary>
+            <param name="mode">Specifies the general indication mode.</param>
+            <param name="mt">Specifies how new SMS-DELIVER messages should be indicated.</param>
+            <param name="bm">Specifies how new Cell Broadcast messages should be indicated.</param>
+            <param name="ds">Specifies how new SMS-STATUS-REPORT messages should be indicated.</param>
+            <param name="bfr">Specifies how the indication buffer should be handled when indications are activated, i.e.
+            when <see cref="P:GsmComm.GsmCommunication.MessageIndicationSettings.Mode"/> is set to any value except <see cref="F:GsmComm.GsmCommunication.MessageIndicationMode.DoNotForward"/>.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSettings.#ctor(GsmComm.GsmCommunication.MessageIndicationMode,GsmComm.GsmCommunication.SmsDeliverIndicationStyle,GsmComm.GsmCommunication.CbmIndicationStyle,GsmComm.GsmCommunication.SmsStatusReportIndicationStyle,GsmComm.GsmCommunication.IndicationBufferSetting)">
+            <summary>
+            Initializes a new instance of the structure.
+            </summary>
+            <param name="mode">Specifies the general indication mode.</param>
+            <param name="mt">Specifies how new SMS-DELIVER messages should be indicated.</param>
+            <param name="bm">Specifies how new Cell Broadcast messages should be indicated.</param>
+            <param name="ds">Specifies how new SMS-STATUS-REPORT messages should be indicated.</param>
+            <param name="bfr">Specifies how the indication buffer should be handled when indications are activated, i.e.
+            when <see cref="P:GsmComm.GsmCommunication.MessageIndicationSettings.Mode"/> is set to any value except <see cref="F:GsmComm.GsmCommunication.MessageIndicationMode.DoNotForward"/>.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSettings.Mode">
+            <summary>
+            Specifies the general indication mode.
+            </summary>
+            <remarks>
+            You can use one of the <see cref="T:GsmComm.GsmCommunication.MessageIndicationMode"/> values to set this property.
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSettings.DeliverStyle">
+            <summary>
+            Specifies how new SMS-DELIVER messages should be indicated.
+            </summary>
+            <remarks>
+            You can use one of the <see cref="T:GsmComm.GsmCommunication.SmsDeliverIndicationStyle"/> values to set this property.
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSettings.CellBroadcastStyle">
+            <summary>
+            Specifies how new Cell Broadcast messages should be indicated.
+            </summary>
+            <remarks>
+            You can use one of the <see cref="T:GsmComm.GsmCommunication.CbmIndicationStyle"/> values to set this property.
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSettings.StatusReportStyle">
+            <summary>
+            Specifies how new SMS-STATUS-REPORT messages should be indicated.
+            </summary>
+            <remarks>
+            You can use one of the <see cref="T:GsmComm.GsmCommunication.SmsStatusReportIndicationStyle"/> values to set this property.
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSettings.BufferSetting">
+            <summary>
+            Specifies how the indication buffer should be handled when indications are activated, i.e.
+            when <see cref="P:GsmComm.GsmCommunication.MessageIndicationSettings.Mode"/> is set to any value except <see cref="F:GsmComm.GsmCommunication.MessageIndicationMode.DoNotForward"/>.
+            </summary>
+            <remarks>
+            You can use one of the <see cref="T:GsmComm.GsmCommunication.IndicationBufferSetting"/> values to set this property.
+            </remarks>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageIndicationMode">
+            <summary>
+            Specifies the possible modes for for new message indications.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageIndicationMode.DoNotForward">
+            <summary>
+            Buffer unsolicited result codes in the TA. If TA result code buffer is full, indications can be
+            buffered in some other place or the oldest indications may be discarded and replaced with the new
+            received indications.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageIndicationMode.SkipWhenReserved">
+            <summary>
+            Discard indication and reject new received message unsolicited result codes when TA-TE link is
+            reserved (e.g. in on-line data mode). Otherwise forward them directly to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageIndicationMode.BufferAndFlush">
+            <summary>
+            Buffer unsolicited result codes in the TA when TA-TE link is reserved (e.g. in on-line data mode) and
+            flush them to the TE after reservation. Otherwise forward them directly to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageIndicationMode.ForwardAlways">
+            <summary>
+            Forward unsolicited result codes directly to the TE. TA-TE link specific inband technique used to
+            embed result codes and data when TA is in on-line data mode.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.SmsDeliverIndicationStyle">
+            <summary>
+            Specifies the possible indication styles for new SMS-DELIVER messages.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.Disabled">
+            <summary>
+            No SMS-DELIVER indications are routed to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.RouteMemoryLocation">
+            <summary>
+            If SMS-DELIVER is stored into ME/TA, indication of the memory location is routed to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.RouteMessage">
+            <summary>
+            SMS-DELIVERs (except class 2 messages and messages in the message waiting indication
+            group (store message)) are routed directly to the TE. Depending on the currently selected message
+            format, this is done in either PDU or text mode.
+            Class 2 messages and messages in the message waiting indication group (store message) result in
+            the same indication as with <see cref="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.RouteMemoryLocation"/>.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.RouteSpecial">
+            <summary>
+            Class 3 SMS-DELIVERs are routed directly to TE with the same format as with <see cref="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.RouteMessage"/>.
+            Messages of other data coding schemes result in indication as with <see cref="F:GsmComm.GsmCommunication.SmsDeliverIndicationStyle.RouteMemoryLocation"/>.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.CbmIndicationStyle">
+            <summary>
+            Specifies the possible indication settings for new cell broadcast messages (CBMs).
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.CbmIndicationStyle.Disabled">
+            <summary>
+            No CBM indications are routed to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.CbmIndicationStyle.RouteMemoryLocation">
+            <summary>
+            If CBM is stored into ME/TA, indication of the memory location is routed to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.CbmIndicationStyle.RouteMessage">
+            <summary>
+            New CBMs are routed directly to the TE.
+            </summary>
+            <remarks> If ME supports data coding groups which define special routing also for messages other than
+            class 3 (e.g. SIM specific messages), ME may choose not to route messages of such data coding schemes
+            into TE (indication of a stored CBM may be given as with <see cref="F:GsmComm.GsmCommunication.CbmIndicationStyle.RouteMemoryLocation"/>.</remarks>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.CbmIndicationStyle.RouteSpecial">
+            <summary>
+            Class 3 CBMs are routed directly to TE using the same indications as with <see cref="F:GsmComm.GsmCommunication.CbmIndicationStyle.RouteMessage"/>.
+            If CBM storage is supported, messages of other classes result in indication as with
+            <see cref="F:GsmComm.GsmCommunication.CbmIndicationStyle.RouteMemoryLocation"/>.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.SmsStatusReportIndicationStyle">
+            <summary>
+            Specifies the possible indication settings for new status report messages.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsStatusReportIndicationStyle.Disabled">
+            <summary>
+            No SMS-STATUS-REPORTs are routed to the TE.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsStatusReportIndicationStyle.RouteMessage">
+            <summary>
+            SMS-STATUS-REPORTs are routed to the TE using unsolicited result code. Depending on the currently
+            selected message format, this is done in either PDU or text mode.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.SmsStatusReportIndicationStyle.RouteMemoryLocation">
+            <summary>
+            If SMS-STATUS-REPORT is stored into ME/TA, indication of the memory location is routed to the TE.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.IndicationBufferSetting">
+            <summary>
+            Specifies what should happen to the TA's indication buffer.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.IndicationBufferSetting.Flush">
+            <summary>
+            The TA buffer of unsolicited result codes is flushed to the TE when an
+            <see cref="T:GsmComm.GsmCommunication.MessageIndicationMode"/> other than <see cref="F:GsmComm.GsmCommunication.MessageIndicationMode.DoNotForward"/> is entered.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.IndicationBufferSetting.Clear">
+            <summary>
+            TA buffer of unsolicited result codes defined within this command is cleared when an
+            <see cref="T:GsmComm.GsmCommunication.MessageIndicationMode"/> other than <see cref="F:GsmComm.GsmCommunication.MessageIndicationMode.DoNotForward"/> is entered.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.DeleteScope">
+            <summary>
+            Lists the possible scopes for deleting short messages.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteScope.Read">
+            <summary>Delete all read messages.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteScope.ReadAndSent">
+            <summary>Delete all read and sent messages.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteScope.ReadSentAndUnsent">
+            <summary>Delete all read, sent and unsent messages</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteScope.All">
+            <summary>Delete all messages including unread messages.</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.Charset">
+            <summary>
+            Lists some common character sets.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Ucs2">
+            <summary>The UCS2 (Unicode) character set</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Gsm">
+            <summary>The GSM character set</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Pccp437">
+            <summary>The PCCP437 character set</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Pcdn">
+            <summary>The PCDN character set</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Ira">
+            <summary>The IRA character set</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Iso8859_1">
+            <summary>The ISO 8859-1 character set</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.Charset.Hex">
+            <summary>The characters encoded as hex</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.AddressData">
+            <summary>
+            Contains network address data.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.AddressData.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="address">The network address</param>
+            <param name="typeOfAddress">The type of the given <b>address</b></param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.AddressData.Address">
+            <summary>
+            Gets the network address.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.AddressData.TypeOfAddress">
+            <summary>
+            Gets the type of the <see cref="P:GsmComm.GsmCommunication.AddressData.Address"/>.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.SubscriberInfo">
+            <summary>
+            Contains network subscriber info retrieved from the phone.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.SubscriberInfo.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="number">Phone number of format specified by <b>type</b>.</param>
+            <param name="type">Type of address in integer format.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.SubscriberInfo.#ctor(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="alpha">An optional alphanumeric string associated with <b>number</b></param>
+            <param name="number">Phone number of format specified by <b>type</b></param>
+            <param name="type">Type of address in integer format</param>
+            <param name="speed">A value for the speed of data calls</param>
+            <param name="service">The service related to the phone number</param>
+            <param name="itc">A value for the information transfer capability</param>
+            <remarks>
+            Valid values for <b>speed</b>, <b>service</b> and <b>itc</b> are zero or greater,
+            set values to -1 where the information is not available.
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SubscriberInfo.Alpha">
+            <summary>
+            Gets an optional alphanumeric string associated with <see cref="P:GsmComm.GsmCommunication.SubscriberInfo.Number"/>;
+            used character set is the one selected with <see cref="M:GsmComm.GsmCommunication.GsmPhone.SelectCharacterSet(System.String)"/>.
+            </summary>
+            <remarks>If the string is not defined, it is empty.</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SubscriberInfo.Number">
+            <summary>
+            Gets the phone number of format specified by <see cref="P:GsmComm.GsmCommunication.SubscriberInfo.Type"/>.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SubscriberInfo.Type">
+            <summary>
+            Gets the type of Address in integer format.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SubscriberInfo.Speed">
+            <summary>
+            Gets a value for the speed for data calls.
+            </summary>
+            <remarks>Valid values are zero or greater, -1 means this info is not available.</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SubscriberInfo.Service">
+            <summary>
+            Gets the service related to the phone number.
+            </summary>
+            <remarks><para>Valid values are zero or greater, -1 means this info is not available.</para>
+            <para>Some defined values can be found in the <see cref="T:GsmComm.GsmCommunication.PhoneNumberService"/> enumeration.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SubscriberInfo.Itc">
+            <summary>
+            Gets a value for the information transfer capability.
+            </summary>
+            <remarks>Valid values are zero or greater, -1 means this info is not available.</remarks>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.OperatorStatus">
+            <summary>
+            Conatins the operator availability values.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorStatus.Unknown">
+            <summary>The operator status is unknown.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorStatus.Available">
+            <summary>The operator is available for selection.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorStatus.Current">
+            <summary>Denotes that this is the currently selected operator.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorStatus.Forbidden">
+            <summary>The phone must not connect to this operator.</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.BatteryChargeInfo">
+            <summary>
+            Contains the ME battery charging status and charge level.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.BatteryChargeInfo.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="batteryChargingStatus">
+            The battery charging status, usually 0 for "not charging" and 1 for "charging".
+            </param>
+            <param name="batteryChargeLevel">
+            The battery charge level, usually in the range of 0 (empty) to 100 (full).
+            </param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.BatteryChargeInfo.BatteryChargingStatus">
+            <summary>
+            Gets the battery charging status.
+            </summary>
+            <remarks>Usual values are 0 for "not charging" and 1 for "charging".</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.BatteryChargeInfo.BatteryChargeLevel">
+            <summary>
+            Gets the battery charge level.
+            </summary>
+            <remarks>Usual values are in the range from 0 (empty) to 100 (full).</remarks>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.OperatorInfo2">
+            <summary>
+            Contains information about a GSM network operator.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.OperatorInfo2.#ctor(GsmComm.GsmCommunication.OperatorStatus,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="status">The operator availability</param>
+            <param name="longAlphanumeric">The operator name in long alphanumeric format</param>
+            <param name="shortAlphanumeric">The operator name in short alphanumeric format</param>
+            <param name="numeric">The operator in numeric format</param>
+            <remarks>If the phone does not support one of the formats <b>longAlphanumeric</b>,
+            <b>shortAlphanumeric</b>, <b>numeric</b>, the curresponding string is left empty.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.OperatorInfo2.#ctor(GsmComm.GsmCommunication.OperatorStatus,System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="status">The operator availability</param>
+            <param name="longAlphanumeric">The operator name in long alphanumeric format</param>
+            <param name="shortAlphanumeric">The operator name in short alphanumeric format</param>
+            <param name="numeric">The operator in numeric format</param>
+            <param name="accessTechnology">The access technology the operator uses.</param>
+            <remarks>
+            <para>If the phone does not support one of the formats <b>longAlphanumeric</b>,
+            <b>shortAlphanumeric</b>, <b>numeric</b>, the curresponding string is left empty.</para>
+            <para>The <b>accessTechnology</b> is optional, as it is only useful for terminals capable
+            to register to more than one access technology.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo2.Status">
+            <summary>
+            Gets the availability of the operator.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo2.LongAlphanumeric">
+            <summary>
+            Gets the operator name in long alphanumeric format.
+            </summary>
+            <remarks>If the phone does not support this format, the string will be empty.</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo2.ShortAlphanumeric">
+            <summary>
+            Gets the operator name in short alphanumic format.
+            </summary>
+            <remarks>If the phone does not support this format, the string will be empty.</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo2.Numeric">
+            <summary>
+            Gets the operator in numeric format.
+            </summary>
+            <remarks>If the phone does not support this format, the string will be empty.</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo2.AccessTechnology">
+            <summary>
+            Gets the access technology the operator uses.
+            </summary>
+            <remarks>This is optional, as it is only useful for terminals capable to register to more than
+            one access technology.</remarks>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageIndicationHandlers">
+            <summary>
+            This class contains the handlers for unsolicited messages sent by the phone. It is for use by the GsmPhone
+            class only and must not be made public.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationHandlers.HandleUnsolicitedMessage(System.String@,System.String@)">
+            <summary>
+            Handles an unsolicited message of the specified input string.
+            </summary>
+            <param name="input">The input string to handle, the unsolicited message will be removed</param>
+            <param name="description">Receives a textual description of the message, may be empty</param>
+            <returns>The message indication object generated from the message</returns>
+            <exception cref="T:System.ArgumentException">Input string does not match any of the supported
+            unsolicited messages</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.#ctor(System.String,GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoHandler)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="pattern">The regular expression pattern that must match to identify the unsolicited message.</param>
+            <param name="handler">The method that handles the message if it matches the pattern</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.IsMatch(System.String)">
+            <summary>
+            Checks if an input string matches the pattern.
+            </summary>
+            <param name="input">The string to check.</param>
+            <returns>true if there is a match, false otherwise.</returns>
+            <remarks>The input string is tested if it matches the pattern. If
+            <see cref="P:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.CompleteChecker"/> is not null, this method is called instead of the default
+            comparison.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.IsStartMatch(System.String)">
+            <summary>
+            Checks if an input string matches the start pattern.
+            </summary>
+            <param name="input">The string to check.</param>
+            <returns>true if there is a match, false otherwise.</returns>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.Pattern">
+            <summary>
+            Gets or sets the regular expression pattern that must match to identify the unsolicited message.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.StartPattern">
+            <summary>
+            Gets or sets the regular expression pattern that must match to identify the start of the unsolicited
+            message. Is equal to <see cref="P:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.Pattern"/> if the message is sent always as a whole by the phone.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.Handler">
+            <summary>
+            Gets or sets the method that can handle the message if it matches the pattern.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationHandlers.UnsoMessage.Description">
+            <summary>
+            Gets or sets a textual description of the unsolicited message.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.OperatorSelectionMode">
+            <summary>
+            Contains the possible values for the operator selection mode.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorSelectionMode.Automatic">
+            <summary>
+            The phone selects the operator automatically.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorSelectionMode.Manual">
+            <summary>
+            A specific operator is selected. The phone does not attempt to select the operator automatically.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorSelectionMode.Deregistered">
+            <summary>
+            The phone is not registered to the network.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.OperatorSelectionMode.ManualAutomatic">
+            <summary>
+            If manual selection fails, automatic mode is entered.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageMemoryStatus">
+            <summary>
+            Contains status information of all message memories.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageMemoryStatus.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageMemoryStatus.#ctor(GsmComm.GsmCommunication.MemoryStatus,GsmComm.GsmCommunication.MemoryStatus,GsmComm.GsmCommunication.MemoryStatus)">
+            <summary>
+            Initializes a new instance of the class with the specified parameters.
+            </summary>
+            <param name="readStorage">Status of the current read storage</param>
+            <param name="writeStorage">Status of the current write storage</param>
+            <param name="receiveStorage">Status of the current receive storage</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageMemoryStatus.ReadStorage">
+            <summary>
+            Gets or sets the status of the current read storage.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageMemoryStatus.WriteStorage">
+            <summary>
+            Gets or sets the status of the current write storage.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageMemoryStatus.ReceiveStorage">
+            <summary>
+            Gets or sets the status of the current receive storage.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.ICommunication">
+            <summary>
+            Provides an interface for low-level access to the device.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.Send(System.String)">
+            <summary>Sends raw string data.</summary>
+            <param name="output">The data to send.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.Receive(System.String@)">
+            <summary>
+            Receives raw string data.</summary>
+            <param name="input">The data received.</param>
+            <returns>true if reception was successful, otherwise false.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.ExecCommand(System.String)">
+            <summary>Executes the specified command and waits for a single response.</summary>
+            <param name="command">The command to execute.</param>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.ExecCommand(System.String,System.String)">
+            <summary>
+            Executes the specified command and waits for a single response.</summary>
+            <param name="command">The command to execute.</param>
+            <param name="receiveErrorMessage">The message text for the exception if no data is received.</param>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.ExecAndReceiveMultiple(System.String)">
+            <summary>Executes the specified command and waits for multiple responses.</summary>
+            <param name="command">The command to execute.</param>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.ExecAndReceiveAnything(System.String,System.String)">
+            <summary>
+            Executes the specified command and returns the response received without verifying it.
+            </summary>
+            <param name="command">The ciommand to execute.</param>
+            <param name="pattern">Specify the regular expression pattern that the received data must match to stop
+            reading.</param>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.ReceiveMultiple">
+            <summary>Waits for multiple responses.</summary>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ICommunication.ReceiveMultiple(System.String)">
+            <summary>Waits for multiple responses.</summary>
+            <returns>The response received.</returns>
+            <param name="pattern">Specify the regular expression pattern that the received data must match to
+            stop reading, can be an empty string if the pattern should not be checked.</param>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.ProgressEventArgs">
+            <summary>
+            Provides data for the <see cref="E:GsmComm.GsmCommunication.GsmPhone.ReceiveProgress"/> and <see cref="E:GsmComm.GsmCommunication.GsmPhone.ReceiveComplete"/> events.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ProgressEventArgs.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the event args.
+            </summary>
+            <param name="progress">The current progress value.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.ProgressEventArgs.Progress">
+            <summary>
+            Get the current progress value.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.ProgressEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.GsmCommunication.GsmPhone.ReceiveProgress"/> and the <see cref="E:GsmComm.GsmCommunication.GsmPhone.ReceiveComplete"/>events.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="e">The arguments containing more information.</param>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageReceivedEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.GsmCommunication.GsmPhone.MessageReceived"/> event.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="e">The arguments containing more information.</param>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageReceivedEventArgs">
+            <summary>
+            Provides data for the <see cref="E:GsmComm.GsmCommunication.GsmPhone.MessageReceived"/> events.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageReceivedEventArgs.#ctor(GsmComm.GsmCommunication.IMessageIndicationObject)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="obj">The object that indicates a new received message.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageReceivedEventArgs.IndicationObject">
+            <summary>
+            The object that indicates a new received message.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.GsmPhone">
+            <summary>
+            Interacts with a mobile phone at a low level to execute various functions.
+            </summary>
+            <remarks>This class also provides a second interface <see cref="T:GsmComm.GsmCommunication.ICommunication"/> that allows
+            direct low level access to the connection.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializing a new instance of the class.
+            </summary>
+            <param name="portNum">The communication (COM) port to use.</param>
+            <param name="baudRate">The baud rate (speed) to use.</param>
+            <param name="timeout">The communication timeout in milliseconds.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.TrimLineBreaks(System.String)">
+            <summary>
+            Removes all line termination characters from a string.
+            </summary>
+            <param name="input">The string to trim.</param>
+            <returns>The modified string.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.Open">
+            <summary>
+            Opens the connection to the device.
+            </summary>
+            <remarks>You can check the current connection state with the <see cref="M:GsmComm.GsmCommunication.GsmPhone.IsOpen"/> method.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.IsOpen"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.Close"/>
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">Connection to device already open.</exception>
+            <exception cref="T:GsmComm.GsmCommunication.CommException">Unable to open the port.</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.Close">
+            <summary>
+            Closes the connection to the device.
+            </summary>
+            <remarks>You can check the current connection state with the <see cref="M:GsmComm.GsmCommunication.GsmPhone.IsOpen"/> method.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.IsOpen"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.Open"/>
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">Port not open.</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.IsOpen">
+            <summary>
+            Checks if the communication to the device is open.
+            </summary>
+            <returns>true if the port is open, false otherwise.</returns>
+            <remarks><para>The port is open after a auccessful call to <see cref="M:GsmComm.GsmCommunication.GsmPhone.Open"/> and must be closed with
+            <see cref="M:GsmComm.GsmCommunication.GsmPhone.Close"/>.</para>
+            <para>This function does not check if there is actually a device connected, use the <see cref="M:GsmComm.GsmCommunication.GsmPhone.IsConnected"/>
+            function for that.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.Open"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.Close"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.IsConnected"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.IsConnected">
+            <summary>
+            Checks if there is a device connected and responsive.
+            </summary>
+            <returns>true if there is really a device connected and it responds to commands, false otherwise.</returns>
+            <remarks>
+            You can use this function after opening the port with <see cref="M:GsmComm.GsmCommunication.GsmPhone.Open"/> to verify that there is really a device connected
+            before processding.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.Open"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.IsOpen"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.IsConnectedInternal">
+            <summary>
+            AT. Checks if there is a device connected and responsive.
+            </summary>
+            <returns>true if there is really a device connected and it responds to commands, false otherwise.</returns>
+            <remarks>
+            Bypasses the communication thread and does a direct send/receive.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetMessageServiceErrorCode(System.String)">
+            <summary>
+            Returns the message service error code in the input string.
+            </summary>
+            <param name="input">The data received</param>
+            <returns>The error code</returns>
+            <remarks>Use the <see cref="M:GsmComm.GsmCommunication.GsmPhone.IsMessageServiceError(System.String)"/> method to check if the string
+            contains a message service error message.</remarks>
+            <exception cref="T:System.ArgumentException">Input string does not contain a message service error code</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.IsMobileEquipmentError(System.String)">
+            <summary>
+            Checks if there is a mobile equipment error message in the input string.
+            </summary>
+            <param name="input">The data received</param>
+            <returns>true if there is a mobile equipment error message in the string, otherwiese false.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetMobileEquipmentErrorCode(System.String)">
+            <summary>
+            Returns the mobile equipment error code in the input string.
+            </summary>
+            <param name="input">The data received</param>
+            <returns>The mobile equipment error code</returns>
+            <remarks>Use the <see cref="M:GsmComm.GsmCommunication.GsmPhone.IsMobileEquipmentError(System.String)"/> method to check if the string
+            contains mobile equipment error message.</remarks>
+            <exception cref="T:System.ArgumentException">Input string does not contain a mobile equipment error code</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.HandleCommError(System.String)">
+            <summary>
+            Handles a communication error.
+            </summary>
+            <param name="input">The data received.</param>
+            <remarks>Call this function when communicating and the response is not a success response. This
+            function checks if the response contains an error message. In any case a <see cref="T:GsmComm.GsmCommunication.CommException"/>
+            or an exception derived from it is thrown based on the type of error.
+            </remarks>
+            <exception cref="T:GsmComm.GsmCommunication.CommException">Always thrown based on type of error.</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SendInternal(System.String,System.Boolean)">
+            <summary>
+            Sends raw data as a string.
+            </summary>
+            <param name="output">The data to send.</param>
+            <param name="logIt">Specifies if the data sent should be logged.</param>
+            <remarks>Send and receive buffers are cleared before sending.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GsmComm#GsmCommunication#ICommunication#Send(System.String)">
+            <summary>
+            Sends raw data as a string.
+            </summary>
+            <param name="output">The data to send.</param>
+            <remarks>Send and receive buffers are cleared before sending.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ReceiveInternal(System.String@)">
+            <summary>
+            Receives raw data as a string.
+            </summary>
+            <param name="input">Receives the data received.</param>
+            <returns>true if data was received, otherwise false.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GsmComm#GsmCommunication#ICommunication#ExecCommand(System.String)">
+            <summary>
+            Executes the specified command and waits for a single response.
+            </summary>
+            <param name="command">The command to send, do not include termination characters.</param>
+            <returns>The received response.</returns>
+            <remarks>
+            <para>The sequence is the following:</para>
+            <para>- Appends CR to output and sends that string</para>
+            <para>- Waits for a single response</para>
+            <para>- Strips away ok code if it's at the end</para>
+            <para>- Strips away output if it's mirrored at the beginning</para>
+            <para>- return input if successful, otherwise an exception is thrown</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GsmComm#GsmCommunication#ICommunication#ExecCommand(System.String,System.String)">
+            <summary>
+            Executes the specified command and waits for a single response.
+            </summary>
+            <param name="command">The command to send, do not include termination characters.</param>
+            <param name="receiveErrorMessage">The string to include in the exception message if
+            there is an error while waiting for the response.</param>
+            <returns>The received response.</returns>
+            <remarks>
+            <para>The sequence is the following:</para>
+            <para>- Appends CR to output and sends that string</para>
+            <para>- Waits for a single response</para>
+            <para>- Strips away ok code if it's at the end</para>
+            <para>- Strips away output if it's mirrored at the beginning</para>
+            <para>- return input if successful, otherwise an exception is thrown</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GsmComm#GsmCommunication#ICommunication#ExecAndReceiveMultiple(System.String)">
+            <summary>
+            Executes the specified command and waits for multiple responses.
+            </summary>
+            <param name="command">The command to send, do not include termination characters.</param>
+            <returns>The received response.</returns>
+            <remarks>
+            <para>Use this method if the response from the device is expected to be larger
+            than one response from the device or when in doubt about the response length.</para>
+            <para>The sequence is the following:</para>
+            <para>- Appends CR to output and sends that string</para>
+            <para>- Waits for multiple responses until an ok or error message is received
+              or receiving is aborted because of too many empty retries.</para>
+            <para>- Strips away ok code if it's at the end</para>
+            <para>- Strips away output if it's mirrored at the beginning</para>
+            <para>- return input if successful, otherwise an exception is thrown</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GsmComm#GsmCommunication#ICommunication#ReceiveMultiple">
+            <summary>
+            Waits for multiple responses.
+            </summary>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GsmComm#GsmCommunication#ICommunication#ReceiveMultiple(System.String)">
+            <summary>
+            Waits for multiple responses.
+            </summary>
+            <param name="pattern">Specify the pattern that the received data must match to stop reading,
+            can be an empty string if the pattern should not be checked.</param>
+            <returns>The response received.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ResetToDefaultConfig">
+            <summary>
+            ATZ. Settings that are not stored in a profile will be reset to their factory defaults.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.RequestTAManufacturer">
+            <summary>
+            AT+GMI. Requests TA manufacturer identifaction.
+            </summary>
+            <returns>The product manufacturer identification.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.RequestTAModel">
+            <summary>
+            AT+GMM. Requests TA model identification.
+            </summary>
+            <returns>The product model identification.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.RequestTARevision">
+            <summary>
+            AT+GMR. Requests TA revision identification.
+            </summary>
+            <returns>The product revision identifiaction.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.RequestTASerialNumber">
+            <summary>
+            AT+GSN. Requests TA serial number identifiaction
+            </summary>
+            <returns>The product serial number.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetSignalQuality">
+            <summary>
+            AT+CSQ. Gets the signal quality as calculated by the ME.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.SignalQualityInfo"/> object containing the signal details.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetBatteryCharge">
+            <summary>
+            AT+CBC. Gets the ME battery charging status and charge level.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.BatteryChargeInfo"/> object containing the battery details.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetPinStatus">
+            <summary>
+            Returns a value indicating whether some password must be entered at the phone or not.
+            </summary>
+            <returns>The current PIN status as one of the <see cref="T:GsmComm.GsmCommunication.PinStatus"/> values.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.EnterPin(System.String)">
+            <summary>
+            Enters a password at the phone which is necessary before it can operated.
+            </summary>
+            <param name="pin">The SIM PIN, SIM PUK or other password required.</param>
+            <remarks>Get the current PIN status with <see cref="M:GsmComm.GsmCommunication.GsmPhone.GetPinStatus"/> to check
+            whether a password must be entered.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SelectPhonebookStorage(System.String)">
+            <summary>
+            AT+CPBS. Selects the storage to use for phonebook operations.
+            </summary>
+            <param name="storage">The storage to use.</param>
+            <returns>The memory status of the selected storage.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ParsePhonebookMemoryStatus(System.String)">
+            <summary>
+            Parses the memory status response of the CPBS command.
+            </summary>
+            <param name="input">A response to the +CPBS set command</param>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MemoryStatus"/> object containing the memory details.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetPhonebookMemoryStatus">
+            <summary>
+            AT+CPBS. Gets the memory status of the currently selected phonebook storage.
+            </summary>
+            <returns>The memory status of the currently selected storage.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetPhonebookStorages">
+            <summary>
+            AT+CPBS. Gets the supported phonebook storages.
+            </summary>
+            <returns>An array of the supported storages</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetPhonebookSize(System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            AT+CPBR. Queries the size of the currently selected phonebook.
+            </summary>
+            <param name="lowerBound">Receives the lower bound of the phonebook</param>
+            <param name="upperBound">Receives the upper bound of the phonebook</param>
+            <param name="nLength">Receives the maximum number length, 0 if unknown</param>
+            <param name="tLength">Receives the maximum text length, 0 if unknown</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ReadPhonebookEntries">
+            <summary>
+            Gets the entire phonebook of the currently selected phonebook storage.
+            </summary>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.PhonebookEntry"/> objects.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ReadPhonebookEntries(System.Int32,System.Int32)">
+            <summary>
+            AT+CPBR. Gets the specified range of phonebook entries.
+            </summary>
+            <param name="lowerBound">The first entry to get</param>
+            <param name="upperBound">The last entry to get</param>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.PhonebookEntry"/> objects</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.DecodePhonebookStream(System.String,System.String)">
+            <summary>
+            Decodes a data stream with phonebook entries into <see cref="T:GsmComm.GsmCommunication.PhonebookEntry"/> objects.
+            </summary>
+            <param name="input">The entries to decode</param>
+            <param name="prefix">The string the lines start with</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.FindPhonebookEntries(System.String)">
+            <summary>
+            AT+CPBF. Searches for the specified text in the phonebook.
+            </summary>
+            <param name="findText">The text to find.</param>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.PhonebookEntry"/> objects containing
+            the specified text</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.WritePhonebookEntry(GsmComm.GsmCommunication.PhonebookEntry)">
+            <summary>
+            AT+CPBW. Creates a new phonebook entry.
+            </summary>
+            <param name="entry">The entry to write.</param>
+            <remarks>The <see cref="P:GsmComm.GsmCommunication.PhonebookEntry.Index"/> property of the entry is ignored, 
+            the entry is always saved in the first free location. All other properties must be set
+            correctly.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.DeletePhonebookEntry(System.Int32)">
+            <summary>
+            AT+CPBW. Deletes a phonebook entry.
+            </summary>
+            <param name="index">The index of the entry to delete.</param>
+            <remarks>In this case it does not matter whether the specified index is valid.
+            If the entry does not exist, no error is returned.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SelectMessageService(System.Int32,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            AT+CSMS. Selects the specified messaging service.
+            </summary>
+            <param name="service">The service to select. Specifies the compatibility level of the SMS AT commands.
+            The requirement of service setting 1 depends on specific commands.
+            </param>
+            <param name="mt">ME supports mobile terminated messages</param>
+            <param name="mo">ME supports mobile originated messages</param>
+            <param name="bm">ME supports broadcast type messages</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentMessageService(System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            AT+CSMS. Gets the supported message types along with the current service setting.
+            </summary>
+            <param name="service">Specifies the compatibility level of the SMS AT commands.
+            The requirement of service setting 1 depends on specific commands.
+            </param>
+            <param name="mt">ME supports mobile terminated messages</param>
+            <param name="mo">ME supports mobile originated messages</param>
+            <param name="bm">ME supports broadcast type messages</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ParseMessageMemoryStatus(System.String)">
+            <summary>
+            Parses the memory status response of the CPMS command.
+            </summary>
+            <param name="input">A response to the +CPMS set command</param>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MessageMemoryStatus"/> object containing the status information of the storages.</returns>
+            <remarks>
+            <para>Data for the ReceiveStorage (mem3) is null if there is no information available about it.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.TryParseMessageMemoryStatus2(System.String)">
+            <summary>
+            Tries to parse an alternative memory status response of the CPMS command.
+            </summary>
+            <param name="input">A response to the +CPMS set command</param>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MessageMemoryStatus"/> object containing the status information of the storages
+            if successful, otherwise null.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SelectReadStorage(System.String)">
+            <summary>
+            AT+CPMS. Selects the storage to use for read and delete operations.
+            </summary>
+            <param name="storage">The storage to use</param>
+            <returns>The memory status of the selected storage.</returns>
+            <remarks>This selects the preferred message storage "mem1" on the device.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SelectWriteStorage(System.String)">
+            <summary>
+            AT+CPMS. Selects the storage to use for write and send operations.
+            </summary>
+            <param name="storage">The storage to use</param>
+            <returns>The memory status of the selected storage</returns>
+            <remarks>This selects the preferred message storage "mem2" on the device. Additionaly, the "mem1" storage
+            is also set to the same storage since the read storage must also be set when selecting the 
+            write storage.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ActivatePduMode">
+            <summary>
+            AT+CMGF. Activates the PDU mode. Device must support it or the call will fail.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ActivateTextMode">
+            <summary>
+            AT+CMGF. Activates the text mode. Device must support it or the call will fail.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SetMessageIndications(GsmComm.GsmCommunication.MessageIndicationSettings)">
+            <summary>
+            AT+CNMI. Selects the procedure for indicating new messages received from the network.
+            </summary>
+            <param name="settings">A <see cref="T:GsmComm.GsmCommunication.MessageIndicationSettings"/> structure containing the
+            detailed settings.</param>
+            <remarks>The function switches to the PDU mode before setting the notifications. This
+            causes all short messages, that are directly routed, to be presented in PDU mode. If the mode
+            is changed (such as a switch to the text mode), all indications (containing a message) following the
+            change are sent in the new mode.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetMessageIndications">
+            <summary>
+            AT+CNMI. Gets the current message notification settings.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MessageIndicationSettings"/> structure containing the detailed settings.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetSupportedIndications">
+            <summary>
+            AT+CNMI. Gets the supported new message indications from the phone.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MessageIndicationSupport"/> object containing information about the supported
+            indications.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ListMessages(GsmComm.GsmCommunication.PhoneMessageStatus)">
+            <summary>
+            AT+CMGL. Reads SMS messages from the current read/delete storage using the PDU mode.
+            </summary>
+            <param name="status">The message status</param>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.ShortMessage"/> objects representing the messages read.</returns>
+            <remarks>Always switches to PDU mode at the beginning.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ReadMessage(System.Int32)">
+            <summary>
+            AT+CMGR. Reads a single SMS message from the current read/delete storage using the PDU mode.
+            </summary>
+            <param name="index">The index of the message to read.</param>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.ShortMessage"/> object containing the message at the index specified.</returns>
+            <remarks>Always switches to PDU mode at the beginning.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.AcknowledgeNewMessage">
+            <summary>
+            AT+CNMA. Confirms reception of a new message (SMS-DELIVER or SMS-STATUS-REPORT) which is routed
+            directly to the TE. This acknowledgement command shall be used when "service" parameter
+            of the <see cref="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentMessageService(System.Int32@,System.Int32@,System.Int32@,System.Int32@)"/> function equals 1.
+            </summary>
+            <remarks>This sends a positive acknowledgement to the network.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.AcknowledgeNewMessage(System.Boolean)">
+            <summary>
+            AT+CNMA. Confirms reception of a new message (SMS-DELIVER or SMS-STATUS-REPORT) which is routed
+            directly to the TE.  This acknowledgement command shall be used when "service" parameter
+            of the <see cref="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentMessageService(System.Int32@,System.Int32@,System.Int32@,System.Int32@)"/> function equals 1.
+            </summary>
+            <param name="ok">Specifies whether the message was received correctly.
+            Setting this parameter to true, will send a positive (RP-ACK) acknowledgement to the network.
+            Setting this parameter to false, will send a negative (RP-ERROR) acknowledgement to the network.
+            </param>
+            <remarks>
+            <para>If ME does not get acknowledgement within required time (network timeout), ME should send RP-ERROR to
+            the network. ME/TA shall automatically disable routing to TE.</para>
+            <para>If command is executed, but no acknowledgement is expected, or some other ME related error occurs,
+            a <see cref="T:GsmComm.GsmCommunication.MessageServiceErrorException"/> is raised.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SendMessage(System.String,System.Int32)">
+            <summary>
+            AT+CMGS. Sends an SMS message using PDU mode.
+            </summary>
+            <param name="pdu">The PDU stream to send</param>
+            <param name="actualLength">The actual length of the PDU (not counting the SMSC data)</param>
+            <returns>The message reference</returns>
+            <remarks>Always switches to PDU mode at the beginning.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.WriteMessageToMemory(System.String,System.Int32,System.Int32)">
+            <summary>
+            AT+CMGW. Stores an SMS message in the current write/send storage using PDU mode.
+            </summary>
+            <param name="pdu">The message in PDU format</param>
+            <param name="actualLength">The actual length of the PDU (not counting the SMSC data)</param>
+            <param name="status">The status that the message should get when saved.</param>
+            <returns>The index of the message. If the index could not be retrieved, zero is returned.</returns>
+            <remarks><para>The message is saved with a status predefined by the phone</para>
+            <para>This function always switches to the PDU mode at the beginning.</para></remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.WriteMessageToMemory(System.String,System.Int32)">
+            <summary>
+            AT+CMGW. Stores an SMS message in the current write/send storage using PDU mode.
+            </summary>
+            <param name="pdu">The message in PDU format</param>
+            <param name="actualLength">The actual length of the PDU (not counting the SMSC data)</param>
+            <returns>The index of the message. If the index could not be retrieved, zero is returned.</returns>
+            <remarks><para>The message is saved with a status predefined by the phone</para>
+            <para>This function always switches to the PDU mode at the beginning.</para></remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.DeleteMessage(System.Int32)">
+            <summary>
+            AT+CMGD. Deletes the specified SMS message from the current read/delete storage.
+            </summary>
+            <param name="index">The index of the message to delete.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.DeleteMessage(System.Int32,GsmComm.GsmCommunication.DeleteFlag)">
+            <summary>
+            AT+CMGD. Deletes the specified SMS message from the current read/delete storage.
+            </summary>
+            <param name="index">The index of the message to delete.</param>
+            <param name="delflag">The delete flag, this controls the behaviour of the delete command.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetMessageStorages">
+            <summary>
+            AT+CPMS. Gets the supported message storages.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MessageStorageInfo"/> object that contains details about the supported storages.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SetSmscAddress(GsmComm.GsmCommunication.AddressData)">
+            <summary>
+            AT+CSCA. Sets the SMS Service Center Address.
+            </summary>
+            <param name="data">An <see cref="T:GsmComm.GsmCommunication.AddressData"/> object containing the new address</param>
+            <remarks>This command changes the SMSC address, through which SMS messages are transmitted.
+            In text mode, this setting is used by SMS sending and SMS writing commands. In PDU mode, this setting is
+            used by the same commands, but only when the length of the SMSC address coded into the PDU data equals
+            zero.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SetSmscAddress(System.String)">
+            <summary>
+            AT+CSCA. Sets the SMS Service Center Address.
+            </summary>
+            <param name="address">The new SMSC address</param>
+            <remarks>This command changes the SMSC address, through which SMS messages are transmitted.
+            In text mode, setting is used by send and write commands. In PDU mode, setting is used by the same
+            commands, but only when the length of the SMSC address coded into the PDU data equals zero.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetSmscAddress">
+            <summary>
+            AT+CSCA. Gets the SMS Service Center Address.
+            </summary>
+            <returns>The current SMSC address</returns>
+            <remarks>This command returns the SMSC address, through which SMS messages are transmitted.
+            In text mode, this setting is used by SMS sending and SMS writing commands. In PDU mode, this setting is
+            used by the same commands, but only when the length of the SMSC address coded into the PDU data equals
+            zero.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SetMoreMessagesToSend(GsmComm.GsmCommunication.MoreMessagesMode)">
+            <summary>
+            AT+CMMS. Sets the SMS batch mode.
+            </summary>
+            <param name="mode">The new mode to set.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetMoreMessagesToSend">
+            <summary>
+            AT+CMMS. Gets the current SMS batch mode setting.
+            </summary>
+            <returns>The current mode.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.SelectCharacterSet(System.String)">
+            <summary>
+            AT+CSCS. Selects the character set.
+            </summary>
+            <param name="charset">The character set to use.</param>
+            <remarks>This command informs the data card of which character set is used by the TE. The data card is
+            then able to convert character strings correctly between TE and ME character sets. When the data card-TE
+            interface is set to 8-bit operation and the TE uses a 7-bit alphabet, the highest bit shall be set to
+            zero. This setting affects text mode SMS data and alpha fields in the phone book memory. If the ME is
+            using the GSM default alphabet, its characters shall be padded with the 8th bit (zero) before
+            converting them to hexadecimal numbers (that is, a 7-bit alphabet is not packed in the SMS-style
+            packing).
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentCharacterSet"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.GetSupportedCharacterSets"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentCharacterSet">
+            <summary>
+            AT+CSCS. Retrives the currently selected character set.
+            </summary>
+            <returns>The current character set.</returns>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.SelectCharacterSet(System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.GetSupportedCharacterSets"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetSupportedCharacterSets">
+            <summary>
+            AT+CSCS. Retrieves the phone's supported character sets.
+            </summary>
+            <returns>A string array containing the supported character sets.</returns>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.SelectCharacterSet(System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentCharacterSet"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.ListOperators">
+            <summary>
+            Lists the network operators detected by the phone.
+            </summary>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.OperatorInfo2"/> objects containing the data of each operator.</returns>
+            <remarks>If you want to determine the current operator, use the <see cref="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentOperator"/> method.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetCurrentOperator">
+            <summary>
+            AT+COPS. Gets the currently selected network operator.
+            </summary>
+            <returns>An <see cref="T:GsmComm.GsmCommunication.OperatorInfo"/> object containing the data or null if there is no current operator.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetOperatorSelectionMode">
+            <summary>
+            AT+COPS. Determines the current mode to select a network operator.
+            </summary>
+            <returns>The current mode, see <see cref="T:GsmComm.GsmCommunication.OperatorSelectionMode"/> for possible values.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmPhone.GetSubscriberNumbers">
+            <summary>
+            AT+CNUM. Returns the MSISDNs related to the subscriber.
+            </summary>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.SubscriberInfo"/> objects with one for each MSISDN
+            (Mobile Subscriber ISDN Number), depending on the services subscribed.</returns>
+            <remarks>
+            <para>This information can be stored in the SIM/UICC or in the MT.</para>
+            <para>If the command is supported by the phone but no number can be retrieved,
+            an empty array is returned.</para>
+            </remarks>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmPhone.LoglineAdded">
+            <summary>
+            The event that occurs when a new line was added to the log.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmPhone.PortNumber">
+            <summary>
+            Gets the COM port.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmPhone.BaudRate">
+            <summary>
+            Gets the baud rate.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmPhone.Timeout">
+            <summary>
+            Gets the communication timeout.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmPhone.ConnectionCheckDelay">
+            <summary>
+            Gets or sets the delay in milliseconds between the checks to verify that the connection
+            to the phone is still alive.
+            </summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmPhone.ReceiveProgress">
+            <summary>The event that occurs when new data was received from the phone.</summary>
+            <remarks>This event is only fired by reading operations that may take longer to complete.</remarks>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmPhone.ReceiveComplete">
+            <summary>The event that occurs when receiving from the phone is completed.</summary>
+            <remarks>This event is only fired by reading operations that may take longer to complete.</remarks>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmPhone.PhoneConnected">
+            <summary>The event that occurs when the phone is connected.</summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmPhone.PhoneDisconnected">
+            <summary>The event that occurs when the phone is disconnected.</summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmPhone.MessageReceived">
+            <summary>
+            The event that occurs when a new SMS message was received.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.GsmPhone.LoglineAddedEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.GsmCommunication.GsmPhone.LoglineAdded"/> event.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="text">The line text.</param>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.ShortMessage">
+            <summary>
+            Represents a short message in undecoded PDU format.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.IMessageIndicationObject">
+            <summary>
+            The interface identifying an object as being used for indicating new incoming messages.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ShortMessage.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ShortMessage.#ctor(System.String,System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.GsmCommunication.ShortMessage"/> class.
+            </summary>
+            <param name="alpha">The alphabet in which the message is encoded.</param>
+            <param name="length">The length of the data.</param>
+            <param name="data">The message.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.ShortMessage.Alpha">
+            <summary>
+            The alphabet in which the message is encoded.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.ShortMessage.Length">
+            <summary>
+            The length of the message. In PDU format, this is the actual length without the SMSC header.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.ShortMessage.Data">
+            <summary>
+            The actual message.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.ShortMessageFromPhone">
+            <summary>
+            Represents a short message read from the phone in undecoded PDU format.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ShortMessageFromPhone.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.ShortMessageFromPhone.#ctor(System.Int32,System.Int32,System.String,System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.GsmCommunication.ShortMessageFromPhone"/> class.
+            </summary>
+            <param name="index">The index where the message is saved in the device in the currently active storage.</param>
+            <param name="status">The message status (e.g. read or unread)</param>
+            <param name="alpha">The alphabet in which the message is encoded.</param>
+            <param name="length">The length of the data.</param>
+            <param name="data">The actual message.</param>
+            <remarks>The object contains all data returned by the phone.
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.ShortMessageFromPhone.Index">
+            <summary>
+            The index of the message.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.ShortMessageFromPhone.Status">
+            <summary>
+            The message status (e.g. read, unread, etc.)
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.DecodedShortMessage">
+            <summary>
+            Represents a short message from the phone in its decoded state.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.DecodedShortMessage.#ctor(System.Int32,GsmComm.PduConverter.SmsPdu,GsmComm.GsmCommunication.PhoneMessageStatus,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.GsmCommunication.ShortMessageFromPhone"/>class.
+            </summary>
+            <param name="index">The index where the message is saved in the device in the <see cref="F:GsmComm.GsmCommunication.DecodedShortMessage.storage"/>.</param>
+            <param name="data">The decoded message.</param>
+            <param name="status">The parsed message status.</param>
+            <param name="storage">The phone storage the message was read from.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.DecodedShortMessage.Index">
+            <summary>
+            Gets the index where the message is saved in the device in the <see cref="P:GsmComm.GsmCommunication.DecodedShortMessage.Storage"/>.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.DecodedShortMessage.Data">
+            <summary>
+            Gets the decoded message.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.DecodedShortMessage.Status">
+            <summary>
+            Gets the parsed message status.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.DecodedShortMessage.Storage">
+            <summary>
+            Gets the phone storage the message was read from.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.PhoneMessageStatus">
+            <summary>
+            The message status to request from the phone or the actual type.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneMessageStatus.ReceivedUnread">
+            <summary>The message was received, but not yet read.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneMessageStatus.ReceivedRead">
+            <summary>The message was received and has been read.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneMessageStatus.StoredUnsent">
+            <summary>The message was stored, but had not been sent yet.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneMessageStatus.StoredSent">
+            <summary>The message was stored and sent.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneMessageStatus.All">
+            <summary>Specifies all status.</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.PhonebookEntry">
+            <summary>
+            Represents a phonebook entry.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.PhonebookEntry.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.PhonebookEntry.#ctor(System.Int32,System.String,System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the class using the specified values.
+            </summary>
+            <param name="index">The index where the entry is saved in the phone.</param>
+            <param name="number">The phone number.</param>
+            <param name="type">The <see cref="P:GsmComm.GsmCommunication.PhonebookEntry.Number"/>'s address type.</param>
+            <param name="text">The text (name) associated with the <see cref="P:GsmComm.GsmCommunication.PhonebookEntry.Number"/>.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.PhonebookEntry.#ctor(GsmComm.GsmCommunication.PhonebookEntry)">
+            <summary>
+            Initializes a new instance of the class to copy an existing <see cref="T:GsmComm.GsmCommunication.PhonebookEntry"/>.
+            </summary>
+            <param name="entry">The entry to copy.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.PhonebookEntry.Index">
+            <summary>
+            The index where the entry is saved in the phone.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.PhonebookEntry.Number">
+            <summary>
+            The phone number.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.PhonebookEntry.Type">
+            <summary>
+            The <see cref="P:GsmComm.GsmCommunication.PhonebookEntry.Number"/>'s address type.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.PhonebookEntry.Text">
+            <summary>
+            The text (name) associated with the <see cref="P:GsmComm.GsmCommunication.PhonebookEntry.Number"/>.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.PhonebookEntryWithStorage">
+            <summary>
+            Represents a <see cref="T:GsmComm.GsmCommunication.PhonebookEntry"/> extended by the storage value.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.PhonebookEntryWithStorage.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.PhonebookEntryWithStorage.#ctor(GsmComm.GsmCommunication.PhonebookEntry,System.String)">
+            <summary>
+            Initializes a new instance of the class using the specified values.
+            </summary>
+            <param name="entry">The phonebook entry</param>
+            <param name="storage">The storage the entry was read from.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.PhonebookEntryWithStorage.Storage">
+            <summary>
+            The storage the entry was read from.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.OperatorInfo">
+            <summary>
+            Contains information about a GSM network operator.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.OperatorInfo.#ctor(GsmComm.GsmCommunication.OperatorFormat,System.String)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="format">The format in which <b>theOperator</b> is specified in. See <see cref="T:GsmComm.GsmCommunication.OperatorFormat"/>
+            for a list of possible values.
+            </param>
+            <param name="theOperator">The operator in the format specified by <b>format</b></param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.OperatorInfo.#ctor(GsmComm.GsmCommunication.OperatorFormat,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="format">The format in which <b>theOperator</b> is specified in. See <see cref="T:GsmComm.GsmCommunication.OperatorFormat"/>
+            for a list of possible values.
+            </param>
+            <param name="theOperator">The operator in the format specified by <b>format</b></param>
+            <param name="accessTechnology">The access technology registered to.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo.Format">
+            <summary>
+            Gets the format in which <see cref="P:GsmComm.GsmCommunication.OperatorInfo.TheOperator"/> is specified in.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo.TheOperator">
+            <summary>
+            Gets the operator in the format specified by <see cref="P:GsmComm.GsmCommunication.OperatorInfo.Format"/>.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.OperatorInfo.AccessTechnology">
+            <summary>
+            Gets the access technology registered to.
+            </summary>
+            <remarks>This is optional, as it is only useful for terminals capable to register to more than
+            one access technology.</remarks>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MoreMessagesMode">
+            <summary>
+            Contains the possible modes for the AT+CMMS command to set the high-speed SMS sending behaviour.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MoreMessagesMode.Disabled">
+            <summary>The function is disabled, the SMS link is not kept open.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MoreMessagesMode.Temporary">
+            <summary>
+            Keep enabled until the time between the response of the latest message send command (+CMGS, +CMSS, etc.)
+            and the next send command exceeds 1-5 seconds (the exact value is up to ME implementation), then ME shall
+            close the link and TA switches the mode automatically back to disabled (0).
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MoreMessagesMode.Permanent">
+            <summary>
+            Enables (if the time between the response of the latest message send command and the next send command
+            exceeds 1-5 seconds (the exact value is up to ME implementation), ME shall close the link but TA shall
+            not switch automatically back to disabled (0)).
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.IdentificationInfo">
+            <summary>
+            Contains information that identify a mobile phone.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.IdentificationInfo.Manufacturer">
+            <summary>
+            Gets or sets the manufacturer.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.IdentificationInfo.Model">
+            <summary>
+            Gets or sets the model.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.IdentificationInfo.Revision">
+            <summary>
+            Gets or sets the revision.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.IdentificationInfo.SerialNumber">
+            <summary>
+            Gets or sets the serial number.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageStorageInfo">
+            <summary>
+            Provides a structure that contains details about supported message storages.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageStorageInfo.ReadStorages">
+            <summary>Specifies the storages that can be used for reading and deleting.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageStorageInfo.WriteStorages">
+            <summary>Speicifies the storages that can be used for writing and sending.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.MessageStorageInfo.ReceiveStorages">
+            <summary>Specifies the storages that can be used as the preferred receive storage.</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MemoryStatus">
+            <summary>
+            Contains the memory status of a specific storage.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MemoryStatus.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="used">The number of messages in the storage</param>
+            <param name="total">The total capacity of the storage</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MemoryStatus.Used">
+            <summary>
+            Gets the number of messages in the storage.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MemoryStatus.Total">
+            <summary>
+            Gets the total capacity of the storage.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MemoryStatusWithStorage">
+            <summary>
+            Contains the memory status of a specific storage, including the storage type.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MemoryStatusWithStorage.#ctor(System.String,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="storage">The storage that this memory status applies to</param>
+            <param name="used">The number of messages in the storage</param>
+            <param name="total">The total capacity of the storage</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MemoryStatusWithStorage.Storage">
+            <summary>
+            Gets the storage that this memory status applies to.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.PinStatus">
+            <summary>
+            Lists the possible PIN states of the phone.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.Ready">
+            <summary>Phone does not wait for any password</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.SimPin">
+            <summary>Phone is waiting for SIM PIN to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.SimPuk">
+            <summary>Phone is waiting for SIM PUK to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToSimPin">
+            <summary>Phone is waiting for phone to SIM card password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToFirstSimPin">
+            <summary>Phone is waiting for phone-to-very first SIM card password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToFirstSimPuk">
+            <summary>Phone is waiting for phone-to-very first SIM card unblocking password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.SimPin2">
+            <summary>
+            Phone is waiting for SIM PIN2 to be given (this status should be expected to be returned
+            by phones only when the last executed command resulted in PIN2 authentication failure (i.e. device
+            error 17); if PIN2 is not entered right after the failure, the phone should be expected not to block
+            its operation)
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.SimPuk2">
+            <summary>
+            Phone is waiting for SIM PUK2 to be given (this status should be expected to be returned
+            by phones only when the last executed command resulted in PUK2 authentication failure (i.e. device
+            error 18); if PUK2 is not entered right after the failure, the phone should be expected not to block
+            its operation)
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToNetworkPin">
+            <summary>Phone is waiting for network personalization password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToNetworkPuk">
+            <summary>Phone is waiting for network personalization unblocking password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToNetworkSubsetPin">
+            <summary>Phone is waiting for network subset personalization password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToNetworkSubsetPuk">
+            <summary>Phone is waiting for network subset personalization unblocking password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToServiceProviderPin">
+            <summary>Phone is waiting for service provider personalization password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToServiceProviderPuk">
+            <summary>Phone is waiting for service provider personalization unblocking password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToCorporatePin">
+            <summary>Phone is waiting for corporate personalization password to be given</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PinStatus.PhoneToCorporatePuk">
+            <summary>Phone is waiting for corporate personalization unblocking password to be given</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.PhoneNumberService">
+            <summary>
+            Contains services related to a subscriber phone number.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneNumberService.AsynchronousModem">
+            <summary>Asynchronous modem</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneNumberService.SynchronousModem">
+            <summary>Synchronous modem</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneNumberService.PadAccess">
+            <summary>PAD Access (asynchronous)</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneNumberService.PacketAccess">
+            <summary>Packet Access (synchronous)</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneNumberService.Voice">
+            <summary>Voice</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneNumberService.Fax">
+            <summary>Fax</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.SignalQualityInfo">
+            <summary>
+            Contains the signal strength as calculcated by the ME.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.SignalQualityInfo.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="signalStrength">The signal strength, usual as an RSSI value in the range of 0 (no signal)
+            to 31 (best signal), 99 if not known.</param>
+            <param name="bitErrorRate">The bit error rate, 99 if not known.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SignalQualityInfo.SignalStrength">
+            <summary>
+            Gets the signal strength.
+            </summary>
+            <remarks>Usual value is an RSSI value in the range of 0 (no signal) to 31 (best signal),
+            99 if not known.</remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.SignalQualityInfo.BitErrorRate">
+            <summary>
+            Gets the bit error rate.
+            </summary>
+            <remarks>Usually 99 is used if the bit error rate is not known.</remarks>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.PhoneStorageType">
+            <summary>
+            Lists common storage types.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneStorageType.Sim">
+            <summary>SIM storage</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.PhoneStorageType.Phone">
+            <summary>Phone storage</summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MemoryLocation">
+            <summary>
+            Contains the memory location of a saved message.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MemoryLocation.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="storage">The storage where the message is saved.</param>
+            <param name="index">The message index within the specified storage.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MemoryLocation.Storage">
+            <summary>
+            Gets the storage where the message is saved.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MemoryLocation.Index">
+            <summary>
+            Gets the message index within the specified <see cref="P:GsmComm.GsmCommunication.MemoryLocation.Storage"/>.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.DeleteFlag">
+            <summary>
+            Lists the possible delete flags for AT+CMGD.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteFlag.DeleteSpecified">
+            <summary>Delete the message specified in index.</summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteFlag.DeleteRead">
+            <summary>
+            Delete all read messages from preferred message storage, leaving unread messages and stored mobile
+            originated messages (whether sent or not) untouched.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteFlag.DeleteReadAndSent">
+            <summary>
+            Delete all read messages from preferred message storage and sent mobile originated messages,
+            leaving unread messages and unsent mobile originated messages untouched.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteFlag.DeleteReadSentAndUnsent">
+            <summary>
+            Delete all read messages from preferred message storage, sent and unsent mobile originated messages
+            leaving unread messages untouched.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.DeleteFlag.DeleteAll">
+            <summary>
+            Delete all messages from preferred message storage including unread messages.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageIndicationSupport">
+            <summary>
+            Contains information about the supported new message indications of the phone.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="mode">A string representation of the phone's supported indication modes</param>
+            <param name="deliver">A string representation of the phones's supported standard SMS (SMS-DELIVER) styles</param>
+            <param name="cellBroadcast">A string representation of the phones's supported cell broadcast styles</param>
+            <param name="statusReport">The phones's supported status report (SMS-STATUS-REPORT) styles</param>
+            <param name="buffer">The phones's supported buffer handling settings</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsMode(System.Int32)">
+            <summary>
+            Checks if a specific indication mode is supported.
+            </summary>
+            <param name="mode">The mode to check</param>
+            <returns>true if the mode is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsMode(GsmComm.GsmCommunication.MessageIndicationMode)">
+            <summary>
+            Checks if a specific indication mode is supported.
+            </summary>
+            <param name="mode">The mode to check</param>
+            <returns>true if the mode is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsDeliverStyle(System.Int32)">
+            <summary>
+            Checks if a specific SMS-DELIVER indication style is supported.
+            </summary>
+            <param name="style">The style to check</param>
+            <returns>true if the style is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsDeliverStyle(GsmComm.GsmCommunication.SmsDeliverIndicationStyle)">
+            <summary>
+            Checks if a specific SMS-DELIVER indication style is supported.
+            </summary>
+            <param name="style">The style to check</param>
+            <returns>true if the style is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsCellBroadcastStyle(System.Int32)">
+            <summary>
+            Checks if a specific cell broadcast indication style is supported.
+            </summary>
+            <param name="style">The style to check</param>
+            <returns>true if the style is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsCellBroadcastStyle(GsmComm.GsmCommunication.CbmIndicationStyle)">
+            <summary>
+            Checks if a specific cell broadcast indication style is supported.
+            </summary>
+            <param name="style">The style to check</param>
+            <returns>true if the style is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsStatusReportStyle(System.Int32)">
+            <summary>
+            Checks if a specific status report (SMS-STATUS-REPORT) indication style is supported.
+            </summary>
+            <param name="style">The style to check</param>
+            <returns>true if the style is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsStatusReportStyle(GsmComm.GsmCommunication.SmsStatusReportIndicationStyle)">
+            <summary>
+            Checks if a specific status report (SMS-STATUS-REPORT) indication style is supported.
+            </summary>
+            <param name="style">The style to check</param>
+            <returns>true if the style is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsBufferSetting(System.Int32)">
+            <summary>
+            Checks if a specific buffer handling setting is supported.
+            </summary>
+            <param name="setting">The setting to check</param>
+            <returns>true if the setting is supported, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageIndicationSupport.SupportsBufferSetting(GsmComm.GsmCommunication.IndicationBufferSetting)">
+            <summary>
+            Checks if a specific buffer handling setting is supported.
+            </summary>
+            <param name="setting">The setting to check</param>
+            <returns>true if the setting is supported, false otherwise.</returns>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSupport.Modes">
+            <summary>
+            Gets a string representation of the supported indication modes.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSupport.DeliverStyles">
+            <summary>
+            Gets a string representation of the supported deliver indication modes.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSupport.CellBroadcastStyles">
+            <summary>
+            Gets a string representation of the supported cell broadcast indication styles.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSupport.StatusReportStyles">
+            <summary>
+            Gets a string representation of the supported status report indication styles.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageIndicationSupport.BufferHandling">
+            <summary>
+            Gets a string representation of the supported buffer handling settings.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageEventArgs">
+            <summary>
+            Provides data for the events that deal with message sending.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageEventArgs.#ctor(GsmComm.PduConverter.OutgoingSmsPdu)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.GsmCommunication.MessageEventArgs"/>.
+            </summary>
+            <param name="pdu">The message that was dealt with.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageEventArgs.Pdu">
+            <summary>
+            The message that was dealt with.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.MessageErrorEventArgs">
+            <summary>
+            Provides data for the error events that deal with message sending.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.MessageErrorEventArgs.#ctor(GsmComm.PduConverter.OutgoingSmsPdu,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.GsmCommunication.MessageErrorEventArgs"/>.
+            </summary>
+            <param name="pdu">The message that failed sending.</param>
+            <param name="exception">The exception that caused the error.</param>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.MessageErrorEventArgs.Exception">
+            <summary>
+            Gets the exception that caused the error.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.GsmCommMain">
+            <summary>
+            Interacts with a mobile phone to execute various functions.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.GsmCommMain.DefaultPortNumber">
+            <summary>
+            The default port to connect to.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.GsmCommMain.DefaultBaudRate">
+            <summary>
+            The default baud rate to use.
+            </summary>
+        </member>
+        <member name="F:GsmComm.GsmCommunication.GsmCommMain.DefaultTimeout">
+            <summary>
+            The default communication timeout.
+            </summary>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.#ctor">
+            <summary>
+            Initializes a new instance of the class using default parameters.
+            </summary>
+            <remarks>Uses the default values: port=COM1, baud rate=19200, timeout=300ms.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the class using the specified parameters.
+            </summary>
+            <param name="portNum">The communication (COM) port to use.</param>
+            <remarks>Uses the default values: baud rate=19200, timeout=300ms.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class using the specified parameters.
+            </summary>
+            <param name="portNum">The communication (COM) port to use.</param>
+            <param name="baudRate">The baud rate (speed) to use.</param>
+            <remarks>Uses the default values: timeout=300ms.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the class using the specified parameters.
+            </summary>
+            <param name="portNum">The communication (COM) port to use.</param>
+            <param name="baudRate">The baud rate (speed) to use.</param>
+            <param name="timeout">The communication timeout in milliseconds.</param>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.Open">
+            <summary>
+            Opens the connection to the device.
+            </summary>
+            <remarks>You can check the current connection state with the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.IsOpen"/> method.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.IsOpen"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.Close"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.Close">
+            <summary>
+            Closes the connection to the device.
+            </summary>
+            <remarks>You can check the current connection state with the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.IsOpen"/> method.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.IsOpen"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.Open"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.IsOpen">
+            <summary>
+            Determines if the port is currently open.
+            </summary>
+            <returns>true if the port is open, otherwise false.</returns>
+            <remarks><para>The port is open after a auccessful call to <see cref="M:GsmComm.GsmCommunication.GsmCommMain.Open"/> and must be closed with
+            <see cref="M:GsmComm.GsmCommunication.GsmCommMain.Close"/>.</para>
+            <para>This function does not check if there is actually a device connected, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.IsConnected"/>
+            function for that.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.Open"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.Close"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.IsConnected"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.IsConnected">
+            <summary>
+            Determines if there is actually a device connected that responds to commands.
+            </summary>
+            <returns>true if there is a device connected and responsive, otherwise false.</returns>
+            <remarks>
+            You can use this function after opening the port with <see cref="M:GsmComm.GsmCommunication.GsmCommMain.Open"/> to verify that there is really a device connected
+            before processding.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.Open"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.IsOpen"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.SendMessage(GsmComm.PduConverter.OutgoingSmsPdu,System.Boolean)">
+            <summary>
+            Sends a short message.
+            </summary>
+            <param name="pdu">The object containing the message to send.</param>
+            <param name="throwExceptions">Indicates whether an exception should be
+            thrown upon an error.</param>
+            <remarks>
+            <para>This method sends the short message contained in the PDU
+            object. If there is an error an exception will be thrown. Additionally,
+            this function also fires the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendFailed"/> event
+            upon an error and the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendComplete"/> event upon success.</para>
+            <para>Set the <b>throwExceptions</b> parameter to false if your message handling
+            uses only the events fired by this method.</para>
+            <para>To send multiple messages in succession, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.SendMessages(GsmComm.PduConverter.OutgoingSmsPdu[])"/> function.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SendMessages(GsmComm.PduConverter.OutgoingSmsPdu[])"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.SendMessage(GsmComm.PduConverter.OutgoingSmsPdu)">
+            <summary>
+            Sends a short message.
+            </summary>
+            <param name="pdu">The object containing the message to send.</param>
+            <remarks>
+            <para>This method sends the short message contained in the PDU
+            object. If there is an error an exception will be thrown. Additionally,
+            this function also fires the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendFailed"/> event
+            upon an error and the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendComplete"/> event upon success.</para>
+            <para>To send multiple messages in succession, use the <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SendMessages(GsmComm.PduConverter.OutgoingSmsPdu[])"/> function.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SendMessages(GsmComm.PduConverter.OutgoingSmsPdu[])"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.SendMessages(GsmComm.PduConverter.OutgoingSmsPdu[])">
+            <summary>
+            Sends multiple messages in succession. Sending stops at the first error.
+            </summary>
+            <param name="pdus">The messages to send.</param>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SendMessage(GsmComm.PduConverter.OutgoingSmsPdu,System.Boolean)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SendMessage(GsmComm.PduConverter.OutgoingSmsPdu)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.EnableTemporarySmsBatchMode">
+            <summary>
+            Enables the SMS batch mode temporarily.
+            </summary>
+            <remarks>
+            <para>When this feature is enabled (and supported by the network), multiple messages can be sent much
+            faster, as the SMS link is kept open between the messages.</para>
+            <para>If there is no message sent for 1-5 seconds (the exact value is up to the phones's implementation)
+            after the last sent SMS message, the SMS link is closed and the batch mode is disabled
+            automatically. You have to re-enable it before you send the next batch of messages, but you
+            also don't have to care about turning it off when finished with sending.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.EnablePermanentSmsBatchMode">
+            <summary>
+            Enables the SMS batch mode permanently.
+            </summary>
+            <remarks>
+            <para>When this feature is enabled (and supported by the network), multiple messages can be sent much
+            faster, as the SMS link is kept open between the messages.</para>
+            <para>If there is no message sent for 1-5 seconds (the exact value is up to the phones's implementation)
+            after the last sent SMS message, the SMS link is closed but the batch mode is kept enabled. You have
+            to explicitely disable it with <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DisableSmsBatchMode"/>.</para>
+            <para>If you don't want to care about turning the batch mode off when done with sending,
+            consider using <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableTemporarySmsBatchMode"/> instead.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DisableSmsBatchMode">
+            <summary>
+            Disables the SMS batch mode.
+            </summary>
+            <remarks>Disables the SMS batch mode previously enabled with
+            <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnablePermanentSmsBatchMode"/> or <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableTemporarySmsBatchMode"/>.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetSmsBatchModeSetting">
+            <summary>
+            Gets the current SMS batch mode setting.
+            </summary>
+            <returns>The current mode.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.ReadMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)">
+            <summary>
+            Reads and decodes short messages from phone.
+            </summary>
+            <param name="status">The status of the messages to read.</param>
+            <param name="storage">The storage to look in for the messages.</param>
+            <returns>An array of decoded messages.</returns>
+            <remarks>As the decoded version of the message is not always guaranteed to
+            be exactly the same when encoded back, do not use this function if you want
+            to save the message in their original form. Use <see cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/> instead
+            for that case.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.ReadMessage(System.Int32,System.String)">
+            <summary>
+            Reads a single short message.
+            </summary>
+            <param name="index">The index of the message to read.</param>
+            <param name="storage">The storage to look in for the message.</param>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.DecodedShortMessage"/> object containing the message at the index specified.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)">
+            <summary>
+            Reads short messages in their original form from phone.
+            </summary>
+            <param name="status">The status of the messages to read.</param>
+            <param name="storage">The storage to look in for the messages.</param>
+            <returns>An array of undecoded short messages, as read from the phone.</returns>
+            <remarks><para>This function is intended to download the messages exactly as they are
+            returned from the phone, e.g. for a backup. If you want to use the messages
+            directly, e.g. displaying them to the user without saving them, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/>
+            function instead.</para>
+            <para>If you want to decode the saved messages later, you can use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DecodeShortMessage(GsmComm.GsmCommunication.ShortMessageFromPhone)"/>
+            function.</para>
+            <para>You can import the saved message back to the phone using the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessageFromPhone,System.String)"/>
+            function.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DecodeShortMessage(GsmComm.GsmCommunication.ShortMessageFromPhone)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessageWithoutStatus(GsmComm.GsmCommunication.ShortMessage,System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessageFromPhone,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DecodeReceivedMessage(GsmComm.GsmCommunication.ShortMessage)">
+            <summary>
+            Decodes a received short message.
+            </summary>
+            <param name="message">The message to decode</param>
+            <returns>The decoded message as <see cref="T:GsmComm.PduConverter.SmsPdu"/> object.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DecodeShortMessage(GsmComm.GsmCommunication.ShortMessageFromPhone)">
+            <summary>
+            Decodes a short message read from the phone.
+            </summary>
+            <param name="message">The message to decode.</param>
+            <returns>The decoded short message.</returns>
+            <remarks>
+            Use this function to decode messages that were read with the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/> function.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/>
+            </remarks>
+            <exception cref="T:GsmComm.GsmCommunication.CommException">There is no decoder available that can handle the message's status.</exception>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DeleteMessage(System.Int32,System.String)">
+            <summary>
+            Deletes the specified short message.
+            </summary>
+            <param name="index">The index of the message to delete.</param>
+            <param name="storage">The storage to use.</param>
+            <remarks>
+            To delete a group of messages, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DeleteMessages(GsmComm.GsmCommunication.DeleteScope,System.String)"/> function.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DeleteMessages(GsmComm.GsmCommunication.DeleteScope,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DeleteMessages(GsmComm.GsmCommunication.DeleteScope,System.String)">
+            <summary>
+            Deletes the specified group of messages.
+            </summary>
+            <param name="scope">Specifies the messages that are affected by this command.</param>
+            <param name="storage">The storage to use.</param>
+            <remarks>
+            To delete a single message, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DeleteMessage(System.Int32,System.String)"/> function.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DeleteMessage(System.Int32,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetMessageStorages">
+            <summary>
+            Gets the device's supported message storages.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.MessageStorageInfo"/> object that contains details about the supported storages.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessageFromPhone,System.String)">
+            <summary>
+            Stores a raw short message in the specified storage.
+            </summary>
+            <param name="message">The message to store.</param>
+            <param name="storage">The storage to store the message in.</param>
+            <returns>The index of the message. If the index could not be retrieved, zero is returned.</returns>
+            <remarks>
+            This function is useful for importing messages that were previously exported with <see cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/>.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadRawMessages(GsmComm.GsmCommunication.PhoneMessageStatus,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessage,System.String,System.Int32)">
+            <summary>
+            Stores a raw short message in the specified storage.
+            </summary>
+            <param name="message">The message to store.</param>
+            <param name="storage">The storage to store the message in.</param>
+            <param name="status">The status to set for the message.</param>
+            <returns>The index of the message. If the index could not be retrieved, zero is returned.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessageWithoutStatus(GsmComm.GsmCommunication.ShortMessage,System.String)">
+            <summary>
+            Stores a raw short message in the specified storage without setting a specific message status.
+            </summary>
+            <param name="message">The message to store.</param>
+            <param name="storage">The storage to store the message in.</param>
+            <returns>The index of the message. If the index could not be retrieved, zero is returned.</returns>
+            <remarks>
+            <para>The message is stored with a predefined status set in the phone.</para>
+            <see cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessageFromPhone,System.String)"/>
+            <see cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessage,System.String,System.Int32)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.AcknowledgeNewMessage">
+            <summary>
+            Acknowledges a new received short message that was directly routed to the application.
+            </summary>
+            <remarks>Acknowledges are required for most received messages if <see cref="M:GsmComm.GsmCommunication.GsmCommMain.IsAcknowledgeRequired"/>
+            returns true. The acknowledge requirement can be changed with the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.RequireAcknowledge(System.Boolean)"/>
+            method.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.RequireAcknowledge(System.Boolean)">
+            <summary>
+            Enables or disables the requirement to acknowledge new received short messages
+            that are directly routed to the application.
+            </summary>
+            <param name="require">Set to true to require acknowledgements, set to false
+            to turn off the requirement.</param>
+            <remarks><para>It depends on the phone when this setting can actually be changed.
+            Because of this, it is recommended to execute <see cref="M:GsmComm.GsmCommunication.GsmCommMain.IsAcknowledgeRequired"/>
+            after a call to RequireAcknowledge to verify the new setting.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.IsAcknowledgeRequired">
+            <summary>
+            Checks if it is required to acknowledge new directly routed incoming messages.
+            </summary>
+            <returns>true if directly routed incoming messages need to be acknowledged, false if not.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageRouting">
+            <summary>
+            Enables direct routing of new received short messages to the application.
+            </summary>
+            <remarks>
+            <para>When a new message is received that is either a standard SMS message or a status report,
+            the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageReceived"/> event is fired. The <see cref="T:GsmComm.GsmCommunication.IMessageIndicationObject"/>
+            in this event must be cast to a <see cref="T:GsmComm.GsmCommunication.ShortMessage"/> object which can then be decoded using
+            <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DecodeReceivedMessage(GsmComm.GsmCommunication.ShortMessage)"/>.</para>
+            <para><b>CAUTION:</b> Because the messages are forwared directly, they are <b>not</b> saved in the phone.
+            If for some reason the message must be saved it must explicitly be done afterwards. Either by using
+            the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessage,System.String,System.Int32)"/> or <see cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessageWithoutStatus(GsmComm.GsmCommunication.ShortMessage,System.String)"/> functions
+            to write the message back to the phone or by storing the message somewhere else for later use.</para>
+            <para>It may be necessary to acknlowledge new routed messages to the phone, either because this
+            is desired for reliable message transfer or because it is preconfigured in the phone. Use 
+            <see cref="M:GsmComm.GsmCommunication.GsmCommMain.IsAcknowledgeRequired"/> to find out if acknowledgements must be done. To do the actual
+            acknowledge, use <see cref="M:GsmComm.GsmCommunication.GsmCommMain.AcknowledgeNewMessage"/>.</para>
+            <para>The supported routing settings vary between different phone models. Therefore the phone is
+            queried first and then the supported settings of the phone are compared to the settings needed for
+            the routing functionality to work. If a specific setting is not supported and there is no
+            alternative setting possible, an exception will be raised.</para>
+            <para>To disable message routing, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DisableMessageRouting"/> function.</para>
+            <para>EnableMessageRouting can't be used with <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageNotifications"/> at the same time.
+            Disable one functionality before using the other.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DisableMessageRouting"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageNotifications"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DecodeReceivedMessage(GsmComm.GsmCommunication.ShortMessage)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessage(GsmComm.GsmCommunication.ShortMessage,System.String,System.Int32)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.WriteRawMessageWithoutStatus(GsmComm.GsmCommunication.ShortMessage,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DisableMessageRouting">
+            <summary>
+            Disables all message routings.
+            </summary>
+            <remarks>
+            <para>Call this function after a call to <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageRouting"/> to disable this functionality
+            again.</para>
+            <para><b>CAUTION:</b> It's highly recommended to disable routing again before closing the connection to
+            the phone. If it doesn't get disabled, the phone will still try to route messages on, which will not be
+            successful. You <b>may</b> lose messages in such a case if the phone doesn't buffer unsuccessful routings.
+            </para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageRouting"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageNotifications">
+            <summary>
+            Enables notifications of new received short messages.
+            </summary>
+            <remarks>
+            <para>When a new message is received that is either a standard SMS message or a status report,
+            the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageReceived"/> event is fired. The <see cref="T:GsmComm.GsmCommunication.IMessageIndicationObject"/>
+            in this event must be cast to a <see cref="T:GsmComm.GsmCommunication.MemoryLocation"/> object, which contains the memory
+            location of the message that was saved in the phone. You can then use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadMessage(System.Int32,System.String)"/>
+            method (for example) to read the new message.</para>
+            <para>The supported notification settings vary between different phone models. Therefore the phone is
+            queried first and then the supported settings of the phone are compared to the settings needed for
+            the notification functionality to work. If a specific setting is not supported and there is no
+            alternative setting possible, an exception will be raised.</para>
+            <para>To disable message notifications, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DisableMessageNotifications"/> function.
+            </para>
+            <para>EnableMessageNotifications can't be used with <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageRouting"/> at the same time.
+            Disable one functionality before using the other.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DisableMessageNotifications"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageRouting"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.ReadMessage(System.Int32,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DisableMessageNotifications">
+            <summary>
+            Disables all message notifications.
+            </summary>
+            <remarks>
+            <para>Call this function after a call to <see cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageNotifications"/> to disable this functionality
+            again.</para>
+            <para>It's highly recommended to disable notifications again before closing the connection to
+            the phone. If it doesn't get disabled, the phone will still try to send notifications, which will not be
+            successful. The phone <b>may</b> buffer unsuccessful notifications, but you should generally not rely
+            on this.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.EnableMessageNotifications"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetMessageMemoryStatus(System.String)">
+            <summary>
+            Gets the memory status of the specified message storage.
+            </summary>
+            <param name="storage">The storage to return the status for</param>
+            <returns>An object containing the memory status of the specified storage.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.SetSmscAddress(GsmComm.GsmCommunication.AddressData)">
+            <summary>
+            Sets the new SMS service center address.
+            </summary>
+            <param name="data">An <see cref="T:GsmComm.GsmCommunication.AddressData"/> object containing the new address</param>
+            <remarks>This command changes the SMSC address, through which SMS messages are transmitted.
+            In text mode, this setting is used by SMS sending and SMS writing commands. In PDU mode, this setting is
+            used by the same commands, but only when the length of the SMSC address coded into the PDU data equals
+            zero.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.SetSmscAddress(System.String)">
+            <summary>
+            Sets the new SMS service center address.
+            </summary>
+            <param name="address">The new SMSC address</param>
+            <remarks>This command changes the SMSC address, through which SMS messages are transmitted.
+            In text mode, this setting is used by SMS sending and SMS writing commands. In PDU mode, this setting is
+            used by the same commands, but only when the length of the SMSC address coded into the PDU data equals
+            zero.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetSmscAddress">
+            <summary>
+            Gets the SMS Service Center Address.
+            </summary>
+            <returns>The current SMSC address</returns>
+            <remarks>This command returns the SMSC address, through which SMS messages are transmitted.
+            In text mode, this setting is used by SMS sending and SMS writing commands. In PDU mode, this setting is
+            used by the same commands, but only when the length of the SMSC address coded into the PDU data equals
+            zero.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.FindPhonebookEntries(System.String,System.String)">
+            <summary>
+            Finds phonebook entries.
+            </summary>
+            <param name="findtext">The text in the entry to find.</param>
+            <param name="storage">The storage to search.</param>
+            <returns>An array of phonebook entries matching the specified criteria.</returns>
+            <remarks>The device executes the actual search. If you need the storage information with the results,
+            use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.FindPhonebookEntriesWithStorage(System.String,System.String)"/> function instead.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.FindPhonebookEntriesWithStorage(System.String,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.FindPhonebookEntriesWithStorage(System.String,System.String)">
+            <summary>
+            Finds phonebook entries and saves the storage where they came from.
+            </summary>
+            <param name="findtext">The text in the entry to find.</param>
+            <param name="storage">The storage to search.</param>
+            <returns>An array of phonebook entries matching the specified criteria.</returns>
+            <remarks>The device executes the actual search. If you don't need the storage information with the
+            results, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.FindPhonebookEntries(System.String,System.String)"/> function instead.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.FindPhonebookEntries(System.String,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebook(System.String)">
+            <summary>
+            Gets the entire phonebook of the selected storage.
+            </summary>
+            <param name="storage">The storage to read the data from.</param>
+            <returns>An array of phonebook entries. If you need the storage information with the
+            results, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebookWithStorage(System.String)"/> function instead.</returns>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebookWithStorage(System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebookWithStorage(System.String)">
+            <summary>
+            Gets the entire phonebook of the selected storage and saves the storage where the entries came from.
+            </summary>
+            <param name="storage">The storage to read the data from.</param>
+            <returns>An array of phonebook entries. If you don't need the storage information with the
+            results, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebook(System.String)"/> function instead.</returns>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebook(System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebookStorages">
+            <summary>
+            Gets the device's supported phonebook storages.
+            </summary>
+            <returns>An array of supported storages in coded form, usually "SM" for SIM, "ME" for
+            phone, etc.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.CreatePhonebookEntry(GsmComm.GsmCommunication.PhonebookEntry,System.String)">
+            <summary>
+            Creates a new phonebook entry.
+            </summary>
+            <param name="entry">The entry to create.</param>
+            <param name="storage">The storage to save the entry.</param>
+            <remarks>The <see cref="P:GsmComm.GsmCommunication.PhonebookEntry.Index"/> property of the entry is ignored, 
+            the entry is always saved in the first free location. All other properties must be set
+            correctly.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DeletePhonebookEntry(System.Int32,System.String)"/></remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DeletePhonebookEntry(System.Int32,System.String)">
+            <summary>
+            Deletes a phonebook entry.
+            </summary>
+            <param name="index">The index of the entry to delete.</param>
+            <param name="storage">The storage to use.</param>
+            <remarks>To delete all phonebook entries at once, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DeleteAllPhonebookEntries(System.String)"/>
+            function.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DeleteAllPhonebookEntries(System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.CreatePhonebookEntry(GsmComm.GsmCommunication.PhonebookEntry,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.DeleteAllPhonebookEntries(System.String)">
+            <summary>
+            Deletes all phonebook entries.
+            </summary>
+            <param name="storage">The storage to use.</param>
+            <remarks>To delete single entries, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.DeletePhonebookEntry(System.Int32,System.String)"/> function.
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.DeletePhonebookEntry(System.Int32,System.String)"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetPhonebookMemoryStatus(System.String)">
+            <summary>
+            Gets the memory status of the specified phonebook storage.
+            </summary>
+            <param name="storage">The storage to return the status for</param>
+            <returns>An object containing the memory status of the specified storage.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.ResetToDefaultConfig">
+            <summary>
+            Resets all settings that are not stored in a profile to their factory defaults.
+            </summary>
+            <remarks>This function is useful if you don't know the state your phone is and
+            want to set it up from scratch.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.IdentifyDevice">
+            <summary>
+            Gathers information that identifiy the connected device.
+            </summary>
+            <returns>An <see cref="T:GsmComm.GsmCommunication.IdentificationInfo"/> object containing data about the device.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetSignalQuality">
+            <summary>
+            Gets the signal quality as calculated by the phone.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.SignalQualityInfo"/> object containing the signal details.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetBatteryCharge">
+            <summary>
+            Gets the phone's battery charging status.
+            </summary>
+            <returns>A <see cref="T:GsmComm.GsmCommunication.BatteryChargeInfo"/> object containing the battery details.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetPinStatus">
+            <summary>
+            Returns a value indicating whether some password must be entered at the phone or not.
+            </summary>
+            <returns>The current PIN status as one of the <see cref="T:GsmComm.GsmCommunication.PinStatus"/> values.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.EnterPin(System.String)">
+            <summary>
+            Enters a password at the phone which is necessary before it can operated.
+            </summary>
+            <param name="pin">The SIM PIN, SIM PUK or other password required.</param>
+            <remarks>Get the current PIN status with <see cref="M:GsmComm.GsmCommunication.GsmCommMain.GetPinStatus"/> to check
+            whether a password must be entered.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.SelectCharacterSet(System.String)">
+            <summary>Selects the text mode character set.</summary>
+            <param name="charset">The character set to use.</param>
+            <remarks>
+            <para>The <see cref="T:GsmComm.GsmCommunication.Charset"/> class contains some common character sets.</para>
+            <para>To get a list of the character sets that the phone supports, use <see cref="M:GsmComm.GsmCommunication.GsmCommMain.GetSupportedCharacterSets"/>.</para>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.GetCurrentCharacterSet"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.GetSupportedCharacterSets"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetCurrentCharacterSet">
+            <summary>
+            Gets the currenty selected text mode character set.
+            </summary>
+            <returns>A string containing the name of the currently selected character set.</returns>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SelectCharacterSet(System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.GetSupportedCharacterSets"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetSupportedCharacterSets">
+            <summary>
+            Gets the phone's supported text mode character sets.
+            </summary>
+            <returns>A string array containing the names of the phone's supportet text mode character sets.</returns>
+            <remarks>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.SelectCharacterSet(System.String)"/>
+            <seealso cref="M:GsmComm.GsmCommunication.GsmCommMain.GetCurrentCharacterSet"/>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetCurrentOperator">
+            <summary>
+            AT+COPS. Gets the currently selected network operator.
+            </summary>
+            <returns>An <see cref="T:GsmComm.GsmCommunication.OperatorInfo"/> object containing the data or null if there is no current operator.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetOperatorSelectionMode">
+            <summary>
+            Determines the current mode to select a network operator.
+            </summary>
+            <returns>The current mode.</returns>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.ListOperators">
+            <summary>
+            Lists the network operators detected by the phone.
+            </summary>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.OperatorInfo2"/> objects containing the data of each operator.</returns>
+            <remarks>If you want to determine the current operator, use the <see cref="M:GsmComm.GsmCommunication.GsmCommMain.GetCurrentOperator"/> method.</remarks>
+        </member>
+        <member name="M:GsmComm.GsmCommunication.GsmCommMain.GetSubscriberNumbers">
+            <summary>
+            Returns the MSISDNs related to the subscriber.
+            </summary>
+            <returns>An array of <see cref="T:GsmComm.GsmCommunication.SubscriberInfo"/> objects with one for each MSISDN
+            (Mobile Subscriber ISDN Number), depending on the services subscribed.</returns>
+            <remarks>
+            <para>This information can be stored in the SIM/UICC or in the MT.</para>
+            <para>If the command is supported by the phone but no number can be retrieved,
+            an empty array is returned.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmCommMain.PortNumber">
+            <summary>
+            Gets COM port currently connected to.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmCommMain.BaudRate">
+            <summary>
+            Gets the baud rate in use.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmCommMain.Timeout">
+            <summary>
+            Gets the current communication timeout.
+            </summary>
+        </member>
+        <member name="P:GsmComm.GsmCommunication.GsmCommMain.ConnectionCheckDelay">
+            <summary>
+            Gets or sets the delay in milliseconds between the checks to verify that the connection
+            to the phone is still alive.
+            </summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.LoglineAdded">
+            <summary>
+            The event that occurs when a new line was added to the log.
+            </summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.ReceiveProgress">
+            <summary>The event that occurs when new data was received from the phone.</summary>
+            <remarks>This event is only fired by reading operations that may take longer to complete.</remarks>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.ReceiveComplete">
+            <summary>The event that occurs when receiving from the phone is completed.</summary>
+            <remarks>This event is only fired by reading operations that may take longer to complete.</remarks>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.PhoneConnected">
+            <summary>The event that occurs when the phone is connected.</summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.PhoneDisconnected">
+            <summary>The event that occurs when the phone is disconnected.</summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendStarting">
+            <summary>
+            The event that occurs immediately before transferring a new message.
+            </summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendComplete">
+            <summary>
+            The event that occurs after a successful message transfer.
+            </summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendFailed">
+            <summary>
+            The event that occurs after a failed message transfer.
+            </summary>
+        </member>
+        <member name="E:GsmComm.GsmCommunication.GsmCommMain.MessageReceived">
+            <summary>
+            The event that occurs when a new message was received.
+            </summary>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.GsmCommMain.LoglineAddedEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.LoglineAdded"/> event.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="text">The log text.</param>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.GsmCommMain.MessageEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendStarting"/> and <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendComplete"/>
+            events.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="e">The <see cref="T:GsmComm.GsmCommunication.MessageEventArgs"/> associated with the event.</param>
+        </member>
+        <member name="T:GsmComm.GsmCommunication.GsmCommMain.MessageErrorEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.GsmCommunication.GsmCommMain.MessageSendFailed"/> event.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="e">The <see cref="T:GsmComm.GsmCommunication.MessageErrorEventArgs"/> associated with the event.</param>
+        </member>
+    </members>
+</doc>

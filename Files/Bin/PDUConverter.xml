@@ -1,0 +1,3024 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PDUConverter</name>
+    </assembly>
+    <members>
+        <member name="T:GsmComm.PduConverter.SmsStatusReportPdu">
+            <summary>
+            Represents an SMS-STATUS-REPORT PDU, a status report message.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.IncomingSmsPdu">
+            <summary>
+            Represents an incoming SMS PDU.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsPdu">
+            <summary>
+            Provides the base for an SMS PDU.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.ITimestamp">
+            <summary>
+            Represents a common interface for messages to return their relevant
+            timestamp.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.ITimestamp.GetTimestamp">
+            <summary>
+            Returns the relevant timestamp.
+            </summary>
+            <returns>A <see cref="T:GsmComm.PduConverter.SmsTimestamp"/> structure representing the relevant message timestamp.</returns>
+        </member>
+        <member name="F:GsmComm.PduConverter.SmsPdu.MaxTextLength">
+            <summary>
+            Gets the maximum message text length in septets.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.SmsPdu.MaxUnicodeTextLength">
+            <summary>
+            Gets the maximum Unicode message text length in characters.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.#ctor">
+            <summary>
+            Initializes a new <see cref="T:GsmComm.PduConverter.SmsPdu"/> instance using default values.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.SetSmscAddress(System.String,System.Byte)">
+            <summary>
+            Sets the SMSC address and type directly without attempting to
+            autodetect the type.
+            </summary>
+            <param name="address">The SMSC address.</param>
+            <param name="addressType">The address type of <b>address</b>.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.GetSmscAddress(System.String@,System.Byte@)">
+            <summary>
+            Gets the SMSC address and the type as it is saved internally.
+            </summary>
+            <param name="address">The SMSC address.</param>
+            <param name="addressType">The address type of <b>address</b>.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.SetUserData(System.Byte[],System.Byte)">
+            <summary>
+            Sets the user data using raw octets.
+            </summary>
+            <param name="data">The user data directly as a byte array.</param>
+            <param name="dataLength">The length of the data. Note that this is not necessarily
+            the number of bytes in the array, the length depends on the data coding.</param>
+            <exception cref="T:System.ArgumentException">UserData is too long, more than 140 octets were passed</exception>
+            <remarks>Assumes that raw octets are passed. Use the <see cref="P:GsmComm.PduConverter.SmsPdu.UserDataText"/> property
+            if you want to pass text.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.ToString(System.Boolean)">
+            <summary>
+            In derived classes, converts the value of this instance into a string.
+            </summary>
+            <param name="excludeSmscData">If true, excludes the SMSC header, otherwise it is included.</param>
+            <returns>The encoded string.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.ToString">
+            <summary>
+            Converts the value of this instance into a string, including SMSC header.
+            </summary>
+            <returns>The encoded string.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.GetTimestamp">
+            <summary>
+            In derived classes, returns the relevant timestamp for the message.
+            </summary>
+            <returns>The timestamp.</returns>
+            <remarks>If the message type does not have a relevant timestamp,
+            it returns <see cref="F:GsmComm.PduConverter.SmsTimestamp.None"/></remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.FindTypeOfAddress(System.String,System.Byte@,System.String@)">
+            <summary>
+            Determines the address type.
+            </summary>
+            <param name="address">The address (phone number).</param>
+            <param name="type">The detected address type.</param>
+            <param name="useThisAddress">The modified address that can be directly used for communication.</param>
+            <example>If you use address "+4812345678" the resulting type will be 0x91 and useThisAddress
+            will be "4812345678". Call <see cref="M:GsmComm.PduConverter.SmsPdu.CreateAddressOfType(System.String,System.Byte)"/> to recreate the original address.</example>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.CreateAddressOfType(System.String,System.Byte)">
+            <summary>
+            Modifies an address to make it look like the specified address type.
+            </summary>
+            <param name="address">The address (phone number).</param>
+            <param name="type">The address type.</param>
+            <returns>The modified address.</returns>
+            <remarks>If the address can't be modified, the original string is returned.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.GetTextLength(System.String)">
+            <summary>
+            Gets the length in septets of the specified text.
+            </summary>
+            <param name="text">The text the get the length for.</param>
+            <returns>The text length.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.GetSafeText(System.String)">
+            <summary>
+            Modifies the message text so that it is safe to be sent via GSM 7-Bit default encoding.
+            </summary>
+            <param name="data">The message text.</param>
+            <returns>The converted message text.</returns>
+            <remarks>Replaces invalid characters in the text and truncates it to the maximum allowed length.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.GetSafeText(System.String,System.Boolean@,System.Boolean@)">
+            <summary>
+            Modifies the message text so that it is safe to be sent via GSM 7-Bit default encoding.
+            </summary>
+            <param name="data">The message text.</param>
+            <param name="charsCorrected">Will be set to true if the message length was corrected.</param>
+            <param name="lengthCorrected">Will be set to true if one or more characters were replaced.</param>
+            <returns>The converted message text.</returns>
+            <remarks>Replaces invalid characters in the text and truncates it to the maximum allowed length.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.Encode7BitText(System.String)">
+            <summary>
+            Encodes the specified text as 7-Bit user data.
+            </summary>
+            <param name="text">The text to encode.</param>
+            <remarks>The text is converted to the GSM 7-Bit default alphabet first, then it is packed into octets.
+            The final result is saved in the properties <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> and <see cref="P:GsmComm.PduConverter.SmsPdu.UserDataLength"/>.
+            </remarks>
+            <exception cref="T:System.ArgumentException">Text is too long.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.Decode7BitText">
+            <summary>
+            Decodes the text from 7-Bit user data.
+            </summary>
+            <returns>The decoded <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/>.</returns>
+            <remarks>This method assumes that the <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> property contains an encoded
+            GSM 7-Bit default text packed into octets. If <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> contains something different,
+            the results are not defined.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.EncodeUcs2Text(System.String)">
+            <summary>
+            Encodes the specified text as UCS2 (16-Bit) user data.
+            </summary>
+            <param name="text">The text to encode.</param>
+            <remarks>The text is converted to the UCS2 character set. The result is saved in the properties
+            <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> and <see cref="P:GsmComm.PduConverter.SmsPdu.UserDataLength"/>.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.DecodeUcs2Text">
+            <summary>
+            Decodes the text from UCS2 (16-Bit) user data.
+            </summary>
+            <returns>The decoded <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/>.</returns>
+            <remarks>This method assumes that the <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> property contains an encoded
+            UCS2 text. If <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> contains something different, the results are not defined.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.DecodeGeneralAddress(System.String,System.Int32@,System.String@,System.Byte@)">
+            <summary>
+            Decodes an address out of a PDU string.
+            </summary>
+            <param name="pdu">The PDU string to use.</param>
+            <param name="index">The index where to start in the string.</param>
+            <param name="address">The address (phone number) read.</param>
+            <param name="addressType">The address type of the read address.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.DecodeSmscAddress(System.String,System.Int32@,System.String@,System.Byte@)">
+            <summary>
+            Decodes an SMSC address out of a PDU string.
+            </summary>
+            <param name="pdu">The PDU string to use.</param>
+            <param name="index">The index where to start in the string.</param>
+            <param name="address">The address (phone number) read.</param>
+            <param name="addressType">The address type of the read address.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsPdu.DecodeUserData(System.String,System.Int32@,System.Byte@,System.Byte[]@)">
+            <summary>
+            Gets the user data out of the string.
+            </summary>
+            <param name="pdu">The PDU string to use.</param>
+            <param name="index">The index where to start in the string.</param>
+            <param name="userDataLength">Receives the user data length in bytes.</param>
+            <param name="userData">Received the user data.</param>
+            <remarks>
+            <para>If there's no data, userDataLength will be set to 0 and userData to null.</para>
+            <para>Processing will abort at the first invalid character encountered or if the
+            string ends too early, but will not change the userDataLength read from the string.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.SmscAddressType">
+            <summary>
+            Gets the type of the SMSC address.
+            </summary>
+            <remarks>
+            <para>Represents the Type-of-Address octets for the SMSC address of the PDU.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.SmscAddress">
+            <summary>
+            Gets or sets the SMSC address.
+            </summary>
+            <remarks>
+            <para>When setting the property: Also the <see cref="P:GsmComm.PduConverter.SmsPdu.SmscAddressType"/> property will be set,
+            attempting to autodetect the address type.</para>
+            <para>When getting the property: The address may be extended with address-type
+            specific prefixes or other chraracters.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.ProtocolID">
+            <summary>
+            Gets or sets the protocol identifier.
+            </summary>
+            <remarks>Represents the TP-PID octet of the PDU.</remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.DataCodingScheme">
+            <summary>
+            Gets or sets the data coding scheme.
+            </summary>
+            <remarks><para>Represents the TP-DCS octet of the PDU.</para>
+            <para>The data coding scheme specifies how the data is coded
+            and may also specify a message class.</para></remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.UserDataLength">
+            <summary>
+            Gets or sets the user data length.
+            </summary>
+            <remarks>
+            <para>Represents the TP-User-Data-Length octet of the PDU.</para>
+            <para>The <see cref="P:GsmComm.PduConverter.SmsPdu.UserDataLength"/> does not necessarily match the number
+            of bytes in the <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> because it may be further encoded.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.UserData">
+            <summary>
+            Gets the user data.
+            </summary>
+            <remarks>
+            <para>Represents the TP-User-Data octet of the PDU.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.UserDataText">
+            <summary>
+            Gets or sets the user data text (i.e. the message text).
+            </summary>
+            <remarks>
+            <para>This property supports automatic encoding and decoding of text from and to the GSM 7-bit default
+            alphabet and the UCS2 charset. For this to work properly, the <see cref="P:GsmComm.PduConverter.SmsPdu.DataCodingScheme"/>
+            property must be set correctly before setting the UserDataText.</para>
+            <para>For all other data with other alphabets or special data codings, the <see cref="P:GsmComm.PduConverter.SmsPdu.UserData"/> property
+            must be used to get or set the data.</para>
+            <para>Setting this property also sets the <see cref="P:GsmComm.PduConverter.SmsPdu.UserDataLength"/> property accordingly.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.ActualLength">
+            <summary>
+            Gets the length of the actual PDU data part in bytes. That is,
+            without the SMSC header.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsPdu.TotalLength">
+            <summary>
+            Gets the total length of the PDU string in bytes.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.IncomingSmsPdu.messageFlags">
+            <summary>
+            The flags for this message.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.IncomingSmsPdu.Decode(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Decodes an incoming SMS PDU stream.
+            </summary>
+            <param name="pdu">The PDU string to decode.</param>
+            <param name="includesSmscData">Specify true if the PDU data contains an SMSC header, otherwise false.</param>
+            <param name="actualLength">The size of the PDU data in bytes, not counting the SMSC header. Set to -1 if unknown.</param>
+            <returns>An <see cref="T:GsmComm.PduConverter.IncomingSmsPdu"/> object representing the decoded message.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.IncomingSmsPdu.Decode(System.String,System.Boolean)">
+            <summary>
+            Decodes an incoming SMS PDU stream.
+            </summary>
+            <param name="pdu">The PDU string to decode.</param>
+            <param name="includesSmscData">Specify true if the PDU data contains an SMSC header, otherwise false.</param>
+            <returns>An <see cref="T:GsmComm.PduConverter.IncomingSmsPdu"/> object representing the decoded message.</returns>
+            <remarks>Use this overload only if you do not know the size of the PDU data.</remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.IncomingSmsPdu.MessageType">
+            <summary>
+            Gets the message type.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportPdu.#ctor">
+            <summary>
+            Initializes a new <see cref="T:GsmComm.PduConverter.SmsStatusReportPdu"/> instance using default values.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportPdu.#ctor(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsStatusReportPdu"/> class
+            using the specified PDU string.
+            </summary>
+            <param name="pdu">The PDU string to convert.</param>
+            <param name="includesSmscData">Specifies if the string contains
+            SMSC data octets at the beginning.</param>
+            <param name="actualLength">Specifies the actual PDU length, that is the length in bytes without
+            the SMSC header. Set to -1 if unknown.</param>
+            <remarks>
+            <para>This constructor assumes that the string contains an <b>SMS-STATUS-REPORT</b>
+            PDU data stream as specified
+            by GSM 07.05.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportPdu.SetRecipientAddress(System.String,System.Byte)">
+            <summary>
+            Sets the recipient address and type directly without attempting to
+            autodetect the type.
+            </summary>
+            <param name="address">The recipient address</param>
+            <param name="addressType">The address type</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportPdu.ToString(System.Boolean)">
+            <summary>
+            Converts the value of this instance into a string.
+            </summary>
+            <param name="excludeSmscData">If true, excludes the SMSC header.</param>
+            <returns>The encoded string.</returns>
+            <remarks>Not implemented, always throws an <see cref="T:System.NotImplementedException"/>.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportPdu.GetTimestamp">
+            <summary>
+            Returns the relevant timestamp for the message.
+            </summary>
+            <returns>An <see cref="T:GsmComm.PduConverter.SmsTimestamp"/> containing the discharge time, the timestamp where
+            the status in this report occurred.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.MessageFlags">
+            <summary>
+            Gets the message flags.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.UserDataHeaderPresent">
+            <summary>
+            Parameter indicating that the TP-UD field contains a Header.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.MoreMessages">
+            <summary>
+            Parameter indicating whether or not there are more messages to send.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.Qualifier">
+            <summary>
+            Parameter indicating whether the previously submitted TPDU was an
+            SMS-SUBMIT or an SMS-COMMAND.
+            </summary>
+            <remarks>
+            <para>false = SMS-STATUS-REPORT is the result of a SMS-SUBMIT</para>
+            <para>true = SMS-STATUS-REPORT is the result of a SMS-COMMAND</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.MessageReference">
+            <summary>
+            Gets or sets the parameter identifying the previously submitted
+            SMS-SUBMIT or an SMS-COMMAND.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.RecipientAddressType">
+            <summary>
+            Gets the type of the recipient address.
+            </summary>
+            <remarks>
+            <para>Represents the Type-of-Address octets for the recipient address of the PDU.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.RecipientAddress">
+            <summary>
+            Gets or sets the address of the recipient of the previously
+            submitted mobile originated short message.
+            </summary>
+            <remarks>
+            <para>When setting the property, also the <see cref="P:GsmComm.PduConverter.SmsStatusReportPdu.RecipientAddressType"/> property
+            will be set, attempting to autodetect the address type.</para>
+            <para>When getting the property, the address may be extended with address-type
+            specific prefixes or other chraracters.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.SCTimestamp">
+            <summary>
+            Gets or sets the parameter identifying time when the SC received
+            the previously sent SMS-SUBMIT.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.DischargeTime">
+            <summary>
+            Gets or sets the parameter identifying the time associated with a
+            particular TP-ST outcome.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.Status">
+            <summary>
+            Gets or sets the parameter identifying the status of the previously
+            sent mobile originated short message.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportPdu.ParameterIndicator">
+            <summary>
+            Gets or sets the parameter indicating the presence of any of the
+            optional parameters which follow.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.OutgoingSmsPdu">
+            <summary>
+            Represents an outgoing SMS PDU.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.OutgoingSmsPdu.Decode(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Decodes an outgoing SMS PDU stream.
+            </summary>
+            <param name="pdu">The PDU string to decode</param>
+            <param name="includesSmscData">Specify true if the PDU data contains an SMSC header, otherwise false.</param>
+            <param name="actualLength">The length of the PDU in bytes, not including the SMSC header.</param>
+            <returns>An <see cref="T:GsmComm.PduConverter.OutgoingSmsPdu"/> object representing the decoded message.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.OutgoingSmsPdu.Decode(System.String,System.Boolean)">
+            <summary>
+            Decodes an outgoing SMS PDU stream.
+            </summary>
+            <param name="pdu">The PDU string to decode.</param>
+            <param name="includesSmscData">Specify true if the PDU data contains an SMSC header, otherwise false.</param>
+            <returns>An <see cref="T:GsmComm.PduConverter.OutgoingSmsPdu"/> object representing the decoded message.</returns>
+            <remarks>Use this method when the actual length of the message is not known.</remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.OutgoingSmsPdu.MessageType">
+            <summary>
+            Gets the message type.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.OutgoingSmsPdu.MessageReference">
+            <summary>
+            Gets or sets the message reference.
+            </summary>
+            <remarks><para>Represents the TP-Message-Reference octet of the PDU.</para>
+            <para>Normally there is no need to change this property because
+            the reference is set by the sending device.</para>.
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.BcdWorker">
+            <summary>
+            A class for working with BCD encoded data strings.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.EncodeSemiOctets(System.String)">
+            <summary>
+            Swaps the semi-octets of a BCD encoded string.
+            </summary>
+            <param name="data">The string to convert.</param>
+            <remarks>
+            <para>If the string is not of even length, it is padded with a
+            hexadecimal "F" before converting.</para>
+            <para>This method does not verify the actual contents of the string.</para>
+            </remarks>
+            <returns>The converted value.</returns>
+            <example>
+            <param>A string containing "12345678" will become "21436587".</param>
+            <param>A string containing "1234567" will become "214365F7".</param>
+            </example>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.EncodeSemiOctets(System.String,System.Int32)">
+            <summary>
+            Swaps the semi-octets of a BCD encoded string.
+            </summary>
+            <param name="data">The string to convert.</param>
+            <param name="totalWidth">The width to pad the string to before converting.
+            Padding character is hexadecimal "F".</param>
+            <remarks>
+            <para>This method does not verify the actual contents of the string.</para>
+            </remarks>
+            <returns>The converted value.</returns>
+            <exception cref="T:System.ArgumentException">totalWidth is not even.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.DecodeSemiOctets(System.String)">
+            <summary>
+            Swaps the semi-octets of a BCD encoded string and checks the length.
+            </summary>
+            <param name="data">The string to decode. Must be of even length.</param>
+            <returns>The converted value.</returns>
+            <exception cref="T:System.ArgumentException">String length is not even.</exception>
+            <example>21436587 becomes 12345678.</example>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.GetByte(System.String,System.Int32)">
+            <summary>
+            Gets a single byte out of a BCD encoded string.
+            </summary>
+            <param name="s">The string containing the BCD data.</param>
+            <param name="index">The position in the string to start.</param>
+            <returns>The byte at the specified position.</returns>
+            <remarks>No range checking is performed.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.GetByteString(System.String,System.Int32)">
+            <summary>
+            Gets a single byte as string out of a BCD encoded string.
+            </summary>
+            <param name="s">The string containing the BCD data.</param>
+            <param name="index">The byte at the specified position.</param>
+            <returns>The byte at the specified position.</returns>
+            <remarks>No range checking is performed.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.GetBytes(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets multiple bytes out of a BCD encoded string.
+            </summary>
+            <param name="s">The string containing the BCD data.</param>
+            <param name="index">The position in the string to start.</param>
+            <param name="length">The number of bytes to read.</param>
+            <returns>The bytes within the specified range.</returns>
+            <remarks>No range checking is performed.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.GetBytesString(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets multiple bytes as string out of a BCD encoded string.
+            </summary>
+            <param name="s">The string containing the BCD data.</param>
+            <param name="index">The position in the string to start.</param>
+            <param name="length">The number of bytes to read.</param>
+            <returns>The bytes within the specified range.</returns>
+            <remarks>No range checking is performed.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.BcdWorker.CountBytes(System.String)">
+            <summary>
+            Counts the number of bytes in a BCD encoded string.
+            </summary>
+            <param name="s">The string containing the BCD data.</param>
+            <returns>The byte count.</returns>
+        </member>
+        <member name="T:GsmComm.PduConverter.OutgoingMessageType">
+            <summary>
+            Specifies the type of the outgoing message.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.OutgoingMessageType.SmsSubmit">
+            <summary>Specifies that the message is an SMS-SUBMIT.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.OutgoingMessageType.SmsCommand">
+            <summary>Specifies that the message is an SMS-COMMAND.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.OutgoingMessageType.SmsDeliverReport">
+            <summary>Specifies that the message is an SMS-DELIVER-REPORT.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.IncomingMessageType">
+            <summary>
+            Specifies the type of the incoming message.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.IncomingMessageType.SmsDeliver">
+            <summary>Specifies that the message is an SMS-DELIVER.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.IncomingMessageType.SmsStatusReport">
+            <summary>Specifies that the message is an SMS-STATUS-REPORT.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.IncomingMessageType.SmsSubmitReport">
+            <summary>Specifies that the message is an SMS-SUBMIT-REPORT.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.AddressType">
+            <summary>
+            Indicates the format of a phone number.
+            </summary>
+            <remarks>
+            The most common value of this octet is 91 hex (10010001 bin), which indicates international format.
+            A phone number in international format looks like 46708251358 (where the country code is 46).
+            In the national (or unknown) format the same phone number would look like 0708251358. The international
+            format is the most generic, and it has to be accepted also when the message is destined to a recipient
+            in the same country as the MSC or as the SGSN. 
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.Unknown">
+            <summary>
+            Unknown type of number and numbering plan.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.UnknownPhone">
+            <summary>
+            Unknown type of number, telephone numbering plan.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.InternationalPhone">
+            <summary>
+            International number, telephone numbering plan.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.AddressType.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.AddressType.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class using the given value.
+            </summary>
+            <param name="toa">The Type-of-Address octet to initialize the object with.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.AddressType.ToByte">
+            <summary>
+            Returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.AddressType.op_Implicit(System.Byte)~GsmComm.PduConverter.AddressType">
+            <summary>
+            Converts the specified <see cref="T:System.Byte"/> value into an <see cref="T:GsmComm.PduConverter.AddressType"/> object.
+            </summary>
+            <param name="toa">A <see cref="T:System.Byte"/> value.</param>
+            <returns>A new <see cref="T:GsmComm.PduConverter.AddressType"/> object whose value equals the value of the
+            <b>b</b> parameter.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.AddressType.op_Implicit(GsmComm.PduConverter.AddressType)~System.Byte">
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.AddressType"/> instance into a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="a">An <see cref="T:GsmComm.PduConverter.AddressType"/> object.</param>
+            <returns>A new <see cref="T:System.Byte"/> value representing the object's value.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.AddressType.Ton">
+            <summary>
+            The Type of number.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.AddressType.Npi">
+            <summary>
+            The Numbering Plan Identification.
+            </summary>
+            <remarks>
+            The Numbering-plan-identification applies for Type-of-number = 000, 001 and 010.
+            For Type-of-number = 101 bits 3,2,1,0 are reserved and shall be transmitted as 0000.
+            Note that for addressing any of the entities SC, MSC, SGSN or MS, Numbering-plan-identification = 0001
+            will always be used. However, for addressing the SME, any specified Numbering-plan-identification
+            value may be used.
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.AddressType.TypeOfNumber">
+            <summary>
+            Indicates the type of the phone number (TON).
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.Unknown">
+            <summary>
+            Unknown. This is used when the user or network has no a priori information about the numbering plan.
+            In this case, the Address-Value field is organized according to the network dialling plan,
+            e.g. prefix or escape digits might be present.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.International">
+            <summary>International number.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.National">
+            <summary>National number. Prefix or escape digits shall not be included.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.NetworkSpecific">
+            <summary>
+            Network specific number. This is used to indicate administration/service number specific
+            to the serving network, e.g. used to access an operator.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.Subscriber">
+            <summary>
+            Subscriber number. This is used when a specific short number representation is stored
+            in one or more SCs as part of a higher layer application. (Note that "Subscriber number"
+            shall only be used in connection with the proper PID referring to this application). 
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.Alphanumeric">
+            <summary>Alphanumeric, (coded according to GSM TS 03.38 7-bit default alphabet).</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.Abbreviated">
+            <summary>Abbreviated number.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.TypeOfNumber.Reserved">
+            <summary>Reserved for extension.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.AddressType.NumberingPlan">
+            <summary>
+            Indicates the Numbering Plan Identification (NPI) of the phone number.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Unknown">
+            <summary>Unknown</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Telephone">
+            <summary>ISDN/telephone numbering plan (E.164/E.163).</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Data">
+            <summary>Data numbering plan (X.121).</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Telex">
+            <summary>Telex numbering plan.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.National">
+            <summary>National numbering plan.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Private">
+            <summary>Private numbering plan.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Ermes">
+            <summary>ERMES numbering plan (ETSI DE/PS 3 01-3).</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.AddressType.NumberingPlan.Reserved">
+            <summary>Reserved for extension.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmartMessaging.OtaBitmap">
+            <summary>
+            Represents an OTA (over-the-air) bitmap.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.#ctor(System.Drawing.Bitmap)">
+            <summary>
+            Creates a new OTA bitmap from an existing <see cref="T:System.Drawing.Bitmap"/> object.
+            </summary>
+            <param name="bitmap">The <see cref="T:System.Drawing.Bitmap"/> to create the OTA bitmap from.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.#ctor(System.Byte[])">
+            <summary>
+            Creates a new OTA bitmap from an existing byte array.
+            </summary>
+            <param name="otaBitmap">The byte array containing the OTA bitmap.</param>
+            <exception cref="T:System.ArgumentNullException">otaBitmap is null.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.ToByteArray">
+            <summary>
+            Returns the byte array equivalent of this instance.
+            </summary>
+            <returns>The byte array.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.ToBitmap">
+            <summary>
+            Returns the <see cref="T:System.Drawing.Bitmap"/> equivalent of this instance.
+            </summary>
+            <returns>The <see cref="T:System.Drawing.Bitmap"/>.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.BitmapToOtaBitmap(System.Drawing.Bitmap)">
+            <summary>
+            Converts a <see cref="T:System.Drawing.Bitmap"/> into an OTA (over-the-air) bitmap.
+            </summary>
+            <param name="bitmap">The <see cref="T:System.Drawing.Bitmap"/> to convert. The maximum allowed
+            size is 255x255 pixels, minimum is 1x1. The bitmap can be any
+            pixel format, but only the black pixels are converted.
+            Can be null to get an empty header.</param>
+            <returns>The converted image. If bitmap is null, an empty OTA bitmap
+            header and no data is returned.</returns>
+            <exception cref="T:System.ArgumentException">bitmap is greater than 255x255 pixels.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.OtaBitmapToBitmap(System.Byte[])">
+            <summary>
+            Converts an OTA bitmap into a <see cref="T:System.Drawing.Bitmap"/>.
+            </summary>
+            <param name="otaBitmap">The OTA bitmap to convert. Can be null.</param>
+            <returns>The converted image. If otaBitmap is null, null is returned.
+            null is also returned, if the height or width of the OTA bitmap is 0.</returns>
+            <remarks>
+            <para>The grayscales attribute of the bitmap is ignored, always a monochrome bitmap is created.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.op_Explicit(GsmComm.PduConverter.SmartMessaging.OtaBitmap)~System.Drawing.Bitmap">
+            <summary>
+            Converts the value of the specified instance into a <see cref="T:System.Drawing.Bitmap"/>.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.op_Implicit(GsmComm.PduConverter.SmartMessaging.OtaBitmap)~System.Byte[]">
+            <summary>
+            Converts the value of the specified instance into a byte array.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.op_Explicit(System.Drawing.Bitmap)~GsmComm.PduConverter.SmartMessaging.OtaBitmap">
+            <summary>
+            Converts the specified value into a new instance of the <see cref="T:GsmComm.PduConverter.SmartMessaging.OtaBitmap"/> class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.OtaBitmap.op_Explicit(System.Byte[])~GsmComm.PduConverter.SmartMessaging.OtaBitmap">
+            <summary>
+            Converts the specified value into a new instance of the <see cref="T:GsmComm.PduConverter.SmartMessaging.OtaBitmap"/> class.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.OtaBitmap.InfoField">
+            <summary>
+            Gets the bitmap's InfoField.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.OtaBitmap.Width">
+            <summary>
+            Gets the bitmap's width.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.OtaBitmap.Height">
+            <summary>
+            Gets the bitmap's height.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.OtaBitmap.NumGrayscales">
+            <summary>
+            Gets the bitmap's number of grayscales.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.OtaBitmap.Data">
+            <summary>
+            Gets the actual bitmap data.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsStatusReportMessageFlags">
+            <summary>
+            Represents the the first octet of an SMS-STATUS-REPORT PDU.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.IncomingMessageFlags">
+            <summary>
+            The base class for the message flags of incoming messages.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.IncomingMessageFlags.ToString">
+            <summary>
+            Returns the string equivalent of this instance.
+            </summary>
+            <returns>The string.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.IncomingMessageFlags.ToByte">
+            <summary>
+            In derived classes, returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.IncomingMessageFlags.FromByte(System.Byte)">
+            <summary>
+            In derived classes, fills the object with values from the data byte.
+            </summary>
+            <param name="b">The byte to use.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.IncomingMessageFlags.op_Implicit(GsmComm.PduConverter.IncomingMessageFlags)~System.Byte">
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.IncomingMessageFlags"/> instance into a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="flags">A <see cref="T:GsmComm.PduConverter.IncomingMessageFlags"/> object.</param>
+            <returns>A new <see cref="T:System.Byte"/> value representing the object's value.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.IncomingMessageFlags.MessageType">
+            <summary>
+            Gets the message type.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportMessageFlags.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the IncomingMessageFlags class with a
+            predefined data byte.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportMessageFlags.ToByte">
+            <summary>
+            Returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsStatusReportMessageFlags.FromByte(System.Byte)">
+            <summary>
+            Fills the object with values from the data byte.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportMessageFlags.MessageType">
+            <summary>
+            Parameter describing the message type.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportMessageFlags.UserDataHeaderPresent">
+            <summary>
+            Parameter indicating that the TP-UD field contains a Header.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportMessageFlags.MoreMessages">
+            <summary>
+            Parameter indicating whether or not there are more messages to send.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsStatusReportMessageFlags.Qualifier">
+            <summary>
+            Parameter indicating whether the previously submitted TPDU was an
+            SMS-SUBMIT or an SMS-COMMAND.
+            </summary>
+            <remarks>
+            <para>false = SMS-STATUS-REPORT is the result of a SMS-SUBMIT</para>
+            <para>true = SMS-STATUS-REPORT is the result of a SMS-COMMAND</para>
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsDeliverPdu">
+            <summary>
+            Represents an SMS-DELIVER PDU, a received short message.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverPdu.#ctor">
+            <summary>
+            Initializes a new <see cref="T:GsmComm.PduConverter.SmsDeliverPdu"/> instance using default values.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverPdu.#ctor(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsDeliverPdu"/> class
+            using the specified PDU string.
+            </summary>
+            <param name="pdu">The PDU string to convert.</param>
+            <param name="includesSmscData">Specifies if the string contains
+            SMSC data octets at the beginning.</param>
+            <param name="actualLength">Specifies the actual PDU length, that is the length in bytes without
+            the SMSC header. Set to -1 if unknown.</param>
+            <remarks>
+            <para>This constructor assumes that the string contains an <b>SMS-DELIVER</b>
+            PDU data stream as specified by GSM 07.05.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverPdu.ToString(System.Boolean)">
+            <summary>
+            Converts the value of this instance into a string.
+            </summary>
+            <param name="excludeSmscData">If true, excludes the SMSC header.</param>
+            <returns>The encoded string.</returns>
+            <remarks>Not implemented, always throws an <see cref="T:System.NotImplementedException"/>.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverPdu.GetTimestamp">
+            <summary>
+            Returns the relevant timestamp for the message.
+            </summary>
+            <returns>An <see cref="T:GsmComm.PduConverter.SmsTimestamp"/> containing the SMSC timestamp,
+            the time the message was received by the service center.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.MessageFlags">
+            <summary>
+            Gets the message flags.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">The property is being set
+            and the value is null.</exception>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.MoreMessages">
+            <summary>
+            Gets or sets if there are more messages to send.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.StatusReportRequested">
+            <summary>
+            Gets or sets if a status report was be requested.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.UserDataHeaderPresent">
+            <summary>
+            Gets or sets if a user data header is present.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.ReplyPathExists">
+            <summary>
+            Gets or sets if a reply path exists.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.OriginatingAddressType">
+            <summary>
+            Gets or sets the type of the originating address.
+            </summary>
+            <remarks>
+            <para>Represents the Type-of-Address octets for the originating address of the PDU.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.OriginatingAddress">
+            <summary>
+            Gets or sets the originating address.
+            </summary>
+            <remarks>
+            <para>When setting the property, also the <see cref="P:GsmComm.PduConverter.SmsDeliverPdu.OriginatingAddressType"/> property
+            will be set, attempting to autodetect the address type.</para>
+            <para>When getting the property, the address may be extended with address-type
+            specific prefixes or other chraracters.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverPdu.SCTimestamp">
+            <summary>
+            Gets or sets the timestamp the message was received by the SC.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.DataCodingScheme">
+            <summary>
+            Indicates how the user data is encoded, this class represents the TP-DCS field.
+            </summary>
+            <remarks>
+            The TP-Data-Coding-Scheme field, defined in GSM 03.40, indicates the data coding scheme of the TP-UD field,
+            and may indicate a message class. Any reserved codings shall be assumed to be the GSM default alphabet
+            (the same as codepoint 00000000) by a receiving entity. The octet is used according to a coding group
+            which is indicated in bits 7..4
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.NoClass_7Bit">
+            <summary>
+            Specifies no message class and 7-bit default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class0_7Bit">
+            <summary>
+            Specifies message class 0 (immediate display) and 7-bit default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class1_7Bit">
+            <summary>
+            Specifies message class 1 (ME specific) and 7-bit default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class2_7Bit">
+            <summary>
+            Specifies message class 2 (SIM specific) and 7-bit default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class3_7Bit">
+            <summary>
+            Specifies message class 3 (TE specific) and 7-bit default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.NoClass_8Bit">
+            <summary>
+            Specifies no message class and 8-bit data.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class0_8Bit">
+            <summary>
+            Specifies message class 0 (immediate display) and 8-bit data.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class1_8Bit">
+            <summary>
+            Specifies message class 1 (ME specific) and 8-bit data.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class2_8Bit">
+            <summary>
+            Specifies message class 2 (SIM specific) and 8-bit data.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class3_8Bit">
+            <summary>
+            Specifies message class 3 (TE specific) and 8-bit data.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.NoClass_16Bit">
+            <summary>
+            Specifies no message class and UCS2 (16-bit) alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class0_16Bit">
+            <summary>
+            Specifies message class 0 (immediate display) and UCS2 (16-bit) alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class1_16Bit">
+            <summary>
+            Specifies message class 1 (ME specific) and UCS2 (16-bit) alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class2_16Bit">
+            <summary>
+            Specifies message class 2 (SIM specific) and UCS2 (16-bit) alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Class3_16Bit">
+            <summary>
+            Specifies message class 3 (TE specific) and UCS2 (16-bit) alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit7offset">
+            <summary>Offset for bit 7 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit6offset">
+            <summary>Offset for bit 6 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit5offset">
+            <summary>Offset for bit 5 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit4offset">
+            <summary>Offset for bit 4 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit3offset">
+            <summary>Offset for bit 3 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit2offset">
+            <summary>Offset for bit 2 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit1offset">
+            <summary>Offset for bit 1 value.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.bit0offset">
+            <summary>Offset for bit 0 value.</summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.DataCodingScheme.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.DataCodingScheme"/> class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.DataCodingScheme.Decode(System.Byte)">
+            <summary>
+            Decodes the given DCS byte.
+            </summary>
+            <param name="dcs">The DCS octet to decode.</param>
+            <returns>An object of type <see cref="T:GsmComm.PduConverter.DataCodingScheme"/> or one of its derived classes.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.DataCodingScheme.CodingGroup">
+            <summary>
+            Gets the coding group, that tells about the further contents of the data coding scheme.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.DataCodingScheme.GeneralCoding">
+            <summary>
+            General data coding indication. Members can be combined.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Compressed">
+            <summary>
+            Data is compressed
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Uncompressed">
+            <summary>
+            Data is uncompressed (default)
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Alpha7BitDefault">
+            <summary>
+            7-bit default alphabet (default)
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Alpha8Bit">
+            <summary>
+            8-bit data
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Alpha16Bit">
+            <summary>
+            Unicode (UCS2)
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.AlphaReserved">
+            <summary>
+            Reserved for future use
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.NoClass">
+            <summary>
+            No class meaning (default)
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Class0">
+            <summary>
+            Immediate display (alert)
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Class1">
+            <summary>
+            ME specific
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Class2">
+            <summary>
+            SIM specific
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.GeneralCoding.Class3">
+            <summary>
+            TE specific
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.DataCodingScheme.MessageWaiting">
+            <summary>
+            Message waiting indication. Members can be combined.
+            </summary>
+            <remarks>At least a "Group" member must be specified.</remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.Group_Discard_7BitDefault">
+            <summary>
+            The receiver may discard the contents of the message, and only
+            present the indication to the user. Text included in the user
+            data is in the default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.Group_Store_7BitDefault">
+            <summary>
+            The receiver shall store the contents of the message in addition
+            to set the indication. Text included in the user
+            data is in the default alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.Group_Store_16Bit">
+            <summary>
+            The receiver shall store the contents of the message in addition
+            to set the indication. Text included in the user
+            data is in the uncompressed UCS2 alphabet.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.SetIndicationActive">
+            <summary>
+            Sets the indication active.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.SetIndicationInactive">
+            <summary>
+            Sets the indication inactive (default).
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.VoicemailMsgWaiting">
+            <summary>
+            Indicates a waiting Voicemail message (default).
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.FaxMsgWaiting">
+            <summary>
+            Indicates a waiting Fax message.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.EMailMsgWaiting">
+            <summary>
+            Indicates a waiting E-Mail message.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageWaiting.OtherMsgWaiting">
+            <summary>
+            Indicates an other type of waiting message.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.DataCodingScheme.DataCoding">
+            <summary>
+            Data coding/message class. Members can be combined.
+            </summary>
+            <remarks>At least a "Group" member must be specified.</remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Group_DataCoding">
+            <summary>
+            Indicates the Data coding/message class group is being used.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Alpha7BitDefault">
+            <summary>
+            7-bit default alphabet
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Alpha8Bit">
+            <summary>
+            8-bit data
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Class0">
+            <summary>
+            Immediate display (alert)
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Class1">
+            <summary>
+            ME specific
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Class2">
+            <summary>
+            SIM specific
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.DataCoding.Class3">
+            <summary>
+            TE specific
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.DataCodingScheme.Alphabets">
+            <summary>
+            Lists the available alphabets within a general data coding indication DCS.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Alphabets.DefaultAlphabet">
+            <summary>7-bit default alphabet</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Alphabets.EightBit">
+            <summary>8-bit data coding</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Alphabets.Ucs2">
+            <summary>UCS2 (16-Bit) alphabet</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.Alphabets.Reserved">
+            <summary>Reserved coding</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.DataCodingScheme.MessageCodings">
+            <summary>
+            Lists the available message codings within a data coding/message class DCS.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageCodings.DefaultAlphabet">
+            <summary>
+            7-bit default alphabet
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.DataCodingScheme.MessageCodings.EightBit">
+            <summary>
+            8-bit data coding
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.GeneralDataCoding">
+            <summary>
+            General Data Coding indication
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.GeneralDataCoding.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="P:GsmComm.PduConverter.GeneralDataCoding.Compressed">
+            <summary>
+            Gets whether the text is compressed.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.GeneralDataCoding.ClassSpecified">
+            <summary>
+            Determines if the <see cref="P:GsmComm.PduConverter.GeneralDataCoding.MessageClass"/> property has a message class meaning. If not,
+            the <see cref="P:GsmComm.PduConverter.GeneralDataCoding.MessageClass"/> property contains a reserved value and has no message class meaning.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.GeneralDataCoding.Alphabet">
+            <summary>
+            Gets the alphabet being used.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.GeneralDataCoding.MessageClass">
+            <summary>
+            Gets the message class.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.MessageWaitingIndication">
+            <summary>
+            Message waiting indication. This class is abstract.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageWaitingIndication.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="P:GsmComm.PduConverter.MessageWaitingIndication.IndicationActive">
+            <summary>
+            Gets if the indication should be set active.
+            </summary>
+            <remarks>If true, the indication should be set active, if false, the indication should be set inactive.</remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.MessageWaitingIndication.IndicationType">
+            <summary>
+            Gets the indication type, how the indication should be shown.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.MessageWaitingDiscard">
+            <summary>
+            Message Waiting Indication Group: Discard Message
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageWaitingDiscard.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="T:GsmComm.PduConverter.MessageWaitingStore">
+            <summary>
+            Message Waiting Indication Group: Store Message
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageWaitingStore.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="T:GsmComm.PduConverter.MessageWaitingStoreUcs2">
+            <summary>
+            Message Waiting Indication Group: Store Message (UCS2)
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageWaitingStoreUcs2.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="T:GsmComm.PduConverter.MessageCoding">
+            <summary>
+            Data coding/Message class
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageCoding.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="P:GsmComm.PduConverter.MessageCoding.DataCoding">
+            <summary>
+            Gets the data coding.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.MessageCoding.MessageClass">
+            <summary>
+            Gets the message class.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.ReservedCodingGroup">
+            <summary>
+            Reserved coding
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.ReservedCodingGroup.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+            <param name="dcs">The DCS byte to decode.</param>
+        </member>
+        <member name="T:GsmComm.PduConverter.OutgoingMessageFlags">
+            <summary>
+            The base class for the message flags of outgoing messages.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.OutgoingMessageFlags.ToString">
+            <summary>
+            Returns the string equivalent of this instance.
+            </summary>
+            <returns>The string.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.OutgoingMessageFlags.ToByte">
+            <summary>
+            In derived classes, returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.OutgoingMessageFlags.FromByte(System.Byte)">
+            <summary>
+            In derived classes, converts the value of the specified <see cref="T:System.Byte"/> value into an <see cref="T:GsmComm.PduConverter.OutgoingMessageFlags"/> object.
+            </summary>
+            <param name="b">A <see cref="T:System.Byte"/> value.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.OutgoingMessageFlags.op_Implicit(GsmComm.PduConverter.OutgoingMessageFlags)~System.Byte">
+            <summary>
+            Converts the value of the specified instance into a byte.
+            </summary>
+            
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.OutgoingMessageFlags"/> instance into a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="flags">A <see cref="T:GsmComm.PduConverter.OutgoingMessageFlags"/> object.</param>
+            <returns>A new <see cref="T:System.Byte"/> value representing the object's value.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.OutgoingMessageFlags.MessageType">
+            <summary>
+            Gets the message type.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsDeliverMessageFlags">
+            <summary>
+            Represents the the first octet of an SMS-DELIVER PDU.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverMessageFlags.#ctor">
+            <summary>
+            Initializing a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverMessageFlags.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the SmsDeliverMessageFlags class with a
+            predefined data byte.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsDeliverMessageFlags.ToByte">
+            <summary>
+            Returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverMessageFlags.MessageType">
+            <summary>
+            Gets the type of the message.
+            </summary>
+            <remarks>Always returns <see cref="F:GsmComm.PduConverter.IncomingMessageType.SmsDeliver"/>.</remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverMessageFlags.MoreMessages">
+            <summary>
+            Gets or sets if there are more messages to send.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverMessageFlags.StatusReportRequested">
+            <summary>
+            Gets or sets if a status report was be requested.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverMessageFlags.UserDataHeaderPresent">
+            <summary>
+            Gets or sets if a user data header is present.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsDeliverMessageFlags.ReplyPathExists">
+            <summary>
+            Gets or sets if a reply path exists.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.Calc">
+            <summary>
+            Performs various numerical conversions and calculations.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.IsHexString(System.String)">
+            <summary>
+            Determines if a string consists only of hexadecimal characters.
+            </summary>
+            <param name="s">The string to check.</param>
+            <returns>true if the string is a hex string, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.IsHexDigit(System.Char)">
+            <summary>
+            Determines if a string is a hexadecimal character.
+            </summary>
+            <param name="c">The character to check.</param>
+            <returns>true if the character is a hex char, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.IntToHex(System.Byte[])">
+            <summary>
+            Converts a byte array into its hexadecimal representation (BCD encoding).
+            </summary>
+            <param name="bytes">The byte array to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.IntToHex(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Converts a byte array into its hexadecimal representation (BCD encoding).
+            </summary>
+            <param name="bytes">The byte array to convert.</param>
+            <param name="index">The starting index of the byte array to convert.</param>
+            <param name="count">The number of bytes to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.IntToHex(System.Byte)">
+            <summary>
+            Converts a byte into its BCD (hexadecimal) representation.
+            </summary>
+            <param name="b">The byte to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.HexToInt(System.String)">
+            <summary>
+            Converts a BCD encoded string (hexadecimal) into its byte representation.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <remarks>
+            The length of the string should be even. This is not checked
+            here to be able to process truncated strings.
+            </remarks>
+            <returns>The converted value.</returns>
+            <example>
+            <para>A string containing "41" will become {0x41}, which equals
+            the character 'A'.</para>
+            <para>A string containing "414242" will become {0x41, 0x42, 0x43}
+            which equals the string "ABC".</para>
+            </example>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.BinToInt(System.String)">
+            <summary>
+            Converts a bit string into a byte.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.Calc.IntToBin(System.Byte,System.Byte)">
+            <summary>
+            Converts a byte into a bit string.
+            </summary>
+            <param name="b">The byte to convert.</param>
+            <param name="size">
+            The final length the string should have. If the resulting string is
+            shorter than this value, it is padded with leading zeroes.
+            </param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="T:GsmComm.PduConverter.KnownMessageStatus">
+            <summary>
+            This enumarator represents the known status codes of a TP-ST octet.
+            Reserved and SC specific values are not part of this list.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.OK_Received">
+            <summary>Short message received by the SME.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.OK_NotConfirmed">
+            <summary>Short message forwarded by the SC to the SME but the SC is	unable to confirm delivery.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.OK_Replaced">
+            <summary>Short message replaced by the SC.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Temp_Congestion">
+            <summary>Congestion.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Temp_SmeBusy">
+            <summary>SME busy.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Temp_NoResponseFromSme">
+            <summary>No response from SME.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Temp_ServiceRejected">
+            <summary>Service Rejected.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Temp_QosNotAvailable">
+            <summary>Quality of service not available.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Temp_ErrorInSme">
+            <summary>Error in SME.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_RemoteProcedureError">
+            <summary>Remote procedure error.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_IncompatibleDestination">
+            <summary>Incompatible destination.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_ConnectionRejectedBySme">
+            <summary>Connection rejected by SME.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_NotObtainable">
+            <summary>Not obtainable.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_QosNotAvailable">
+            <summary>Quality of service not available.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_NoInterworkingAvailable">
+            <summary>No interworking available.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_SMValidityPeriodExpired">
+            <summary>SM Validity Period expired.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_SMDeletedByOriginatingSme">
+            <summary>SM Deleted by originating SME.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_SMDeletedBySCAdministration">
+            <summary>SM Deleted by SC Administration.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Perm_SMDoesNotExist">
+            <summary>SM does not exist (The SM may have previously existed in the SC but the
+            SC no longer has knowledge of it or the SM may never have previously existed in the SC).</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Ntemp_Congestion">
+            <summary>Congestion.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Ntemp_SmeBusy">
+            <summary>SME busy.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Ntemp_NoResponseFromSme">
+            <summary>No response from SME.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Ntemp_ServiceRejected">
+            <summary>Service rejected.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Ntemp_QosNotAvailable">
+            <summary>Quality of service not available.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.KnownMessageStatus.Ntemp_ErrorInSme">
+            <summary>Error in SME.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.StatusCategory">
+            <summary>
+            Contains the possible categories of a message status.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.StatusCategory.Success">
+            <summary>Short message transaction completed.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.StatusCategory.TemporaryErrorWithRetry">
+            <summary>Temporary error, SC still trying to transfer SM.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.StatusCategory.PermanentError">
+            <summary>Permanent error, SC is not making any more transfer attempts.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.StatusCategory.TemporaryErrorNoRetry">
+            <summary>Temporary error, SC is not making any more transfer attempts.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.StatusCategory.Reserved">
+            <summary>Status code is out of the defined range.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.MessageStatus">
+            <summary>
+            TP-ST / TP-Status.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.MessageStatus"/>.
+            </summary>
+            <param name="status">The status code.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.#ctor(GsmComm.PduConverter.KnownMessageStatus)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.MessageStatus"/>.
+            </summary>
+            <param name="status">One of the <see cref="T:GsmComm.PduConverter.KnownMessageStatus"/> values.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.IsKnownStatus">
+            <summary>
+            Checks if the message status exists within the known status list.
+            </summary>
+            <returns>true if the status is a known status, otherwise false.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.GetKnownStatus">
+            <summary>
+            Retrieves the known status of the current message status.
+            </summary>
+            <returns>Ae <see cref="T:GsmComm.PduConverter.KnownMessageStatus"/> representing the message status.</returns>
+            <remarks>Check first with <see cref="M:GsmComm.PduConverter.MessageStatus.IsKnownStatus"/> before calling this method.</remarks>
+            <exception cref="T:System.ArgumentException">Message status is not a known message status.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.ToString">
+            <summary>
+            Returns the string representation of the status.
+            </summary>
+            <returns>The string representation of the known status if it is a known status,
+            the numerical status value otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.ToByte">
+            <summary>
+            Returns the byte representation of the status.
+            </summary>
+            <returns>A <see cref="T:System.Byte"/> value representing the object's value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.op_Implicit(GsmComm.PduConverter.MessageStatus)~System.Byte">
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.MessageStatus"/> instance into a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="s">A <see cref="T:GsmComm.PduConverter.MessageStatus"/> object.</param>
+            <returns>A new <see cref="T:System.Byte"/> value representing the object's value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.op_Implicit(System.Byte)~GsmComm.PduConverter.MessageStatus">
+            <summary>
+            Converts the specified <see cref="T:System.Byte"/> value into a <see cref="T:GsmComm.PduConverter.MessageStatus"/> object.
+            </summary>
+            <param name="b">A <see cref="T:System.Byte"/> value.</param>
+            <returns>A new <see cref="T:GsmComm.PduConverter.MessageStatus"/> object whose value equals the value of the
+            <b>b</b> parameter.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.MessageStatus.op_Implicit(GsmComm.PduConverter.KnownMessageStatus)~GsmComm.PduConverter.MessageStatus">
+            <summary>
+            Converts the specified <see cref="T:GsmComm.PduConverter.KnownMessageStatus"/> into a <see cref="T:GsmComm.PduConverter.MessageStatus"/>.
+            </summary>
+            <param name="s">A <see cref="T:GsmComm.PduConverter.KnownMessageStatus"/> value.</param>
+            <returns>A new <see cref="T:GsmComm.PduConverter.MessageStatus"/> object whose message status represents the value of the <b>s</b> parameter.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.MessageStatus.Category">
+            <summary>
+            Gets the status category.
+            </summary>
+            <remarks>
+            If the valus does not fall into one of the predefined categories, <see cref="F:GsmComm.PduConverter.StatusCategory.Reserved"/>
+            is returned.
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsSubmitPdu">
+            <summary>
+            Represents an SMS-SUBMIT PDU, an outgoing short message.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.#ctor">
+            <summary>
+            Initializes a new <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> instance using default values.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class
+            using the specified text and destination address.
+            </summary>
+            <param name="userDataText">The message text, not exceeding 160 characters.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class using the specified text,
+            destination address and SMSC address.
+            </summary>
+            <param name="userDataText">The message text, not exceeding 160 characters.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <param name="smscAddress">The service center (SMSC) address. Can be an empty string.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.#ctor(System.String,System.String,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class using the specified text,
+            destination address and data coding scheme.
+            </summary>
+            <param name="userDataText">The message text.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <param name="dataCodingScheme">Specifies how the userDataText should be encoded.</param>
+            <remarks><para>The maximum length of the userDataText parameter depends on the alphabet specified with
+            the dataCodingScheme parameter.</para><para>Common values for the dataCodingScheme are
+            <see cref="F:GsmComm.PduConverter.DataCodingScheme.NoClass_7Bit"/> for GSM default alphabet and
+            <see cref="F:GsmComm.PduConverter.DataCodingScheme.NoClass_16Bit"/> for UCS2 alphabet (Unicode).</para></remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.#ctor(System.String,System.String,System.String,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class using the specified text,
+            destination address, SMSC address and data coding scheme.
+            </summary>
+            <param name="userDataText">The message text.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <param name="smscAddress">The service center (SMSC) address. Can be an empty string.</param>
+            <param name="dataCodingScheme">Specifies how the userDataText should be encoded.</param>
+            <remarks><para>The maximum length of the userDataText parameter depends on the alphabet specified with
+            the dataCodingScheme parameter.</para><para>Common values for the dataCodingScheme are
+            <see cref="F:GsmComm.PduConverter.DataCodingScheme.NoClass_7Bit"/> for GSM default alphabet and
+            <see cref="F:GsmComm.PduConverter.DataCodingScheme.NoClass_16Bit"/> for UCS2 alphabet (Unicode).</para></remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.#ctor(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class
+            using the specified PDU string.
+            </summary>
+            <param name="pdu">The PDU string to convert.</param>
+            <param name="includesSmscData">Specifies if the string contains
+            SMSC data octets at the beginning.</param>
+            <param name="actualLength">Specifies the actual PDU length, that is the length in bytes without
+            the SMSC header. Set to -1 if unknown.</param>
+            <remarks>
+            <para>This constructor assumes that the string contains an <b>SMS-SUBMIT</b>
+            PDU data stream as specified
+            by GSM 07.05.</para>
+            <para>AbsuluteValidityPeriod and EnhancedValidityPeriod are not
+            supported and will generate a <see cref="T:System.NotSupportedException"/>
+            when encountered.
+            </para>
+            </remarks>
+            <exception cref="T:System.NotSupportedException">The string contains a
+            validity and the validity period format is not relative validity.
+            </exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.SetDestinationAddress(System.String,System.Byte)">
+            <summary>
+            Sets the destination address and type directly without attempting to
+            autodetect the type.
+            </summary>
+            <param name="address">The destination address</param>
+            <param name="addressType">The address type</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.ToString(System.Boolean)">
+            <summary>
+            Converts the value of this instance into a string.
+            </summary>
+            <param name="excludeSmscData">If true, excludes the SMSC header.</param>
+            <returns>The encoded string.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitPdu.GetTimestamp">
+            <summary>
+            Returns the relevant timestamp for the message.
+            </summary>
+            <returns>Always <see cref="F:GsmComm.PduConverter.SmsTimestamp.None"/>. An <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> does not have
+            a timestamp.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.MessageFlags">
+            <summary>
+            Gets the message flags.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.RejectDuplicates">
+            <summary>
+            Gets or sets if the SC should reject duplicate messages.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.RequestStatusReport">
+            <summary>
+            Gets or sets if s status report should be requested.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.UserDataHeaderPresent">
+            <summary>
+            Gets or sets if a user data header is present.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.ReplyPathExists">
+            <summary>
+            Gets or sets if a reply path exists.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.DestinationAddressType">
+            <summary>
+            Gets the type of the destination address.
+            </summary>
+            <remarks>
+            <para>Represents the Type-of-Address octets for the destination address of the PDU.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.DestinationAddress">
+            <summary>
+            Gets or sets the destination address.
+            </summary>
+            <remarks>
+            <para>When setting the property also the <see cref="P:GsmComm.PduConverter.SmsSubmitPdu.DestinationAddressType"/>
+            property will be set, attempting to autodetect the address type.</para>
+            <para>When getting the property: The address may be extended with address-type
+            specific prefixes or other chraracters.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitPdu.ValidityPeriod">
+            <summary>
+            Gets or sets the validity period.
+            </summary>
+            <remarks>
+            <para>Represents the TP-Validity-Period octet of the PDU.</para>
+            <para>The validity period specifies the time when SM expires. If SM is't delivered
+            before that moment, it is discarded by SC. Validity-Period can be in
+            three different formats: Relative, Enhanced and Absolute.</para>
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.ParameterIndicator">
+            <summary>
+            TP-PI / TP-Parameter-Indicator. Represents particular optional parameter
+            presence in the fields which follow.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.ParameterIndicator.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.ParameterIndicator"/>.
+            </summary>
+            <param name="value">The value to initialize the object with.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.ParameterIndicator.ToByte">
+            <summary>
+            Returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.ParameterIndicator.op_Implicit(GsmComm.PduConverter.ParameterIndicator)~System.Byte">
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.ParameterIndicator"/> structure into a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="pi">A <see cref="T:GsmComm.PduConverter.ParameterIndicator"/> structure.</param>
+            <returns>A new <see cref="T:System.Byte"/> value representing the <see cref="T:GsmComm.PduConverter.ParameterIndicator"/>'s value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.ParameterIndicator.op_Implicit(System.Byte)~GsmComm.PduConverter.ParameterIndicator">
+            <summary>
+            Converts the the specified <see cref="T:System.Byte"/> value into a <see cref="T:GsmComm.PduConverter.ParameterIndicator"/> structure.
+            </summary>
+            <param name="b">A <see cref="T:System.Byte"/> value.</param>
+            <returns>A new <see cref="T:GsmComm.PduConverter.ParameterIndicator"/> structure representing the <see cref="T:System.Byte"/> value.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.Extension">
+            <summary>
+            When set to true, will indicate that another TP-PI octet follows immediately afterwards.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.Reserved_Bit6">
+            <summary>
+            Reserved. If set to true, the receiving entity should ignore
+            this setting.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.Reserved_Bit5">
+            <summary>
+            Reserved. If set to true, the receiving entity should ignore
+            this setting.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.Reserved_Bit4">
+            <summary>
+            Reserved. If set to true, the receiving entity should ignore
+            this setting.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.Reserved_Bit3">
+            <summary>
+            Reserved. If set to true, the receiving entity should ignore
+            this setting.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.TP_UDL">
+            <summary>
+            When false, neither TP-UDL nor TP-UD field can be present.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.TP_DCS">
+            <summary>
+            When true, a TP-DCS field is present.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.ParameterIndicator.TP_PID">
+            <summary>
+            When true, a TP-PID field is present.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.TextDataConverter">
+            <summary>
+            Converts between text strings and PDU-compatible formats.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.TextDataConverter.sevenBitDefault">
+            <summary>
+            The GSM 7-Bit default alphabet.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.StringTo7Bit(System.String,System.Boolean,System.Boolean@)">
+            <summary>
+            Converts a string consisting of characters from the ISO-8859-1
+            character set into a string of corresponding characters of the
+            "GSM 7-bit default alphabet" character set.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <param name="throwExceptions">If true, throws an exception if
+            an invalid character is encountered. If false, replaces every
+            unknown character with a question mark (?).</param>
+            <param name="charsReplaced">Will be set to true if invalid characters
+            were replaced. <b>throwExceptions</b> must be false for this to work.</param>
+            <returns>The converted string.</returns>
+            <remarks>
+            Note that the converted string does not need to have the same
+            length as the original one because some characters may be escaped.
+            </remarks>
+            <exception cref="T:System.ArgumentException">throwExceptions is true and invalid character is encountered in the string.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.StringTo7Bit(System.String)">
+            <summary>
+            Converts a string consisting of characters from the ISO-8859-1
+            character set into a string of corresponding characters of the
+            "GSM 7-bit default alphabet" character set.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <returns>The converted string.</returns>
+            <remarks>
+            <para>Throws an exception when an invalid character is encountered in the string.</para>
+            <para>Note that the converted string does not need to have the same
+            length as the original one because some characters may be escaped.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentException">An invalid character is encountered in the string.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.SevenBitToString(System.String)">
+            <summary>
+            Converts a string consisting of characters from the GSM
+            "7-bit default alphabet" into a string of corresponding characters
+            of the ISO-8859-1 character set.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <returns>The converted string.</returns>
+            <remarks>
+            <para>Note that the converted string does not necessarily have the same
+            length as the original one because some characters may be escaped.</para>
+            <para>This method throws an exception if an invalid character
+            is encountered.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.SevenBitToString(System.String,System.Boolean)">
+            <summary>
+            Converts a string consisting of characters from the GSM
+            "7-bit default alphabet" into a string of corresponding characters
+            of the ISO-8859-1 character set.
+            </summary>
+            <param name="s">The string to convert.</param>
+            <param name="throwExceptions">If true, throws an exception if
+            an invalid character is encountered. If false, replaces every
+            unknown character with a question mark (?).</param>
+            <returns>The converted string.</returns>
+            <remarks>
+            <para>Note that the converted string does not necessarily have the same
+            length as the original one because some characters may be escaped.</para>
+            <para>This method throws an exception if an invalid character
+            is encountered.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.SeptetsToOctetsHex(System.String)">
+            <summary>
+            Compacts a string of septets into octets.
+            </summary>
+            <param name="data">7-bit encoded data (septets), represented as a string.</param>
+            <remarks>
+            <par>When only 7 of 8 available bits of a character are used, 1 bit is
+            wasted per character. This method compacts a string of characters
+            which consist solely of such 7-bit characters.</par>
+            <par>Effectively, every 8 bytes of the original string are packed into
+            7 bytes in the resulting string.</par>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.SeptetsToOctetsInt(System.String)">
+            <summary>
+            Compacts a string of septets into octets.
+            </summary>
+            <param name="data">7-bit encoded data (septets), represented as a string.</param>
+            <remarks>
+            <par>When only 7 of 8 available bits of a character are used, 1 bit is
+            wasted per character. This method compacts a string of characters
+            which consist solely of such 7-bit characters.</par>
+            <par>Effectively, every 8 bytes of the original string are packed into
+            7 bytes in the resulting string.</par>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.TextDataConverter.OctetsToSeptetsStr(System.Byte[])">
+            <summary>
+            Expands an array of octets into string of septets.
+            </summary>
+            <param name="data">An array of 8-bit encoded data (octets), represented as a string.</param>
+            <returns>The converted data as a string.</returns>
+        </member>
+        <member name="T:GsmComm.PduConverter.ValidityPeriod">
+            <summary>
+            Implements the base for a validity Period.
+            </summary>
+            <remarks><para>
+            <b>Note to inheritors:</b> Override the ToString method in derived classes to be able to
+            display the validity immediately as a string.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmartMessaging.InformationElement">
+            <summary>
+            Implements the base for an information element.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.InformationElement.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmartMessaging.InformationElement"/> class.
+            </summary>
+            <param name="identifier">The Information Element Identifier (IEI).</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.InformationElement.ToByteArray">
+            <summary>
+            In the derived classes, returns the byte array equivalent of this instance.
+            </summary>
+            <returns>The byte array.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.InformationElement.ToString">
+            <summary>
+            In the derived classes, returns the string equivalent of this instance.
+            </summary>
+            <returns>The string.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.InformationElement.Identifier">
+            <summary>
+            Gets the Information Element Identifier (IEI).
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.RelativeValidityPeriod">
+            <summary>
+            The relative validity period gives the length of the validity period
+            counted from when the SMS-SUBMIT is received by the SC.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/>.
+            </summary>
+            <param name="value">The byte value of the validity period. Use this
+            if you have already calculated the validity yourself.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.#ctor(System.TimeSpan)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/>.
+            </summary>
+            <param name="period">The validity period.</param>
+            <remarks>
+            There are some rules to note:
+            <list type="bullet">
+            <item><description>
+            The smallest validity period is 5 minutes, 63 weeks the largest.
+            </description></item>
+            <item><description>
+            Periods between 5 minutes and 12 hours can be specified in 5 minute steps.
+            </description></item>
+            <item><description>
+            Periods between 12h30min and 24 hours can be specified in 30 minute steps.
+            </description></item>
+            <item><description>
+            Periods between two days and 30 days can be specified in 1 day steps.
+            </description></item>
+            <item><description>
+            Periods between 5 weeks and 63 weeks can be specified in 1 week (=7 days) steps.
+            </description></item>
+            </list>
+            </remarks>
+            <exception cref="T:System.ArgumentException">Validity timespan is invalid.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.ToByte">
+            <summary>
+            Returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.ToTimeSpan">
+            <summary>
+            Returns the TimeSpan equivalent of this instance.
+            </summary>
+            <returns>The TimeSpan value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.ToString">
+            <summary>
+            Returns the string equivalent of this instance.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.op_Implicit(GsmComm.PduConverter.RelativeValidityPeriod)~System.TimeSpan">
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> instance into a <see cref="T:System.TimeSpan"/> structure.
+            </summary>
+            <param name="v">A <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> object.</param>
+            <returns>A new <see cref="T:System.TimeSpan"/> structure representing the object's value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.op_Implicit(GsmComm.PduConverter.RelativeValidityPeriod)~System.Byte">
+            <summary>
+            Converts the value of the specified instance into a byte.
+            </summary>
+            
+            <summary>
+            Converts the value of the specified <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> instance into a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="v">A <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> object.</param>
+            <returns>A new <see cref="T:System.Byte"/> value representing the object's value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.op_Implicit(System.Byte)~GsmComm.PduConverter.RelativeValidityPeriod">
+            <summary>
+            Converts the specified <see cref="T:System.Byte"/> value into a <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> object.
+            </summary>
+            <param name="b">A <see cref="T:System.Byte"/> value.</param>
+            <returns>A new <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> object whose value represents the <see cref="T:System.Byte"/> value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.RelativeValidityPeriod.op_Explicit(System.TimeSpan)~GsmComm.PduConverter.RelativeValidityPeriod">
+            <summary>
+            Converts the value of the specified <see cref="T:System.TimeSpan"/> structure into a <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/>.
+            </summary>
+            <param name="ts">A <see cref="T:System.TimeSpan"/> structure.</param>
+            <returns>A new <see cref="T:GsmComm.PduConverter.RelativeValidityPeriod"/> object representing the value of the <see cref="T:System.TimeSpan"/> structure.</returns>
+        </member>
+        <member name="T:GsmComm.PduConverter.ProtocolID">
+            <summary>
+            This class and its contained classes contain all possible values for the
+            Protocol Identifier.
+            </summary>
+            <remarks>The members represent the TP-PID octet in the PDU.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.ProtocolID.Reserved(System.Byte)">
+            <summary>
+            Allows the "Reserved" part of the ProtocolID to be used.
+            </summary>
+            <param name="value">The value for this part.</param>
+            <exception cref="T:System.ArgumentException">Value is greater than 0x3F (63).</exception>
+            <returns>The encoded protocol ID.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.ProtocolID.IsReserved(System.Byte)">
+            <summary>
+            Determines if the specified value is from the "Reserved" part.
+            </summary>
+            <param name="pid">The value to check.</param>
+            <returns>true if the value is from the reserved part, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.ProtocolID.GetReservedValue(System.Byte)">
+            <summary>
+            Extracts the "Reserved" part of the PID.
+            </summary>
+            <param name="pid">The PID containing the value.</param>
+            <returns>The value of the "Reserved" part.</returns>
+            <exception cref="T:System.ArgumentException">Value is not from the "Reserved" range.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.ProtocolID.SCSpecificUse(System.Byte)">
+            <summary>
+            Allows the "SC Specific Use" part of the ProtocolID to be used.
+            </summary>
+            <param name="value">The value for this part.</param>
+            <exception cref="T:System.ArgumentException">Value is greater than 0x3F (63).</exception>
+            <returns>The encoded Protocol ID.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.ProtocolID.IsSCSpecificUse(System.Byte)">
+            <summary>
+            Determines if the specified PID is from the "SC Specific Use" part.
+            </summary>
+            <param name="pid">The value to check.</param>
+            <returns>true if the value is for SC specific use, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.ProtocolID.GetSCSpecificUseValue(System.Byte)">
+            <summary>
+            Gets the "SC Specific Use" part of the ProtocolID.
+            </summary>
+            <param name="pid">The PID byte to decode.</param>
+            <returns>The "SC Specific Use" value.</returns>
+            <exception cref="T:System.ArgumentException">Value in pid is not from the "SC specific" range.</exception>
+        </member>
+        <member name="T:GsmComm.PduConverter.ProtocolID.NoInterworking">
+            <summary>
+            For the straightforward case of simple MS-to-SC short message
+            transfer. No interworking is performed.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NoInterworking.SmeToSmeProtocol">
+            <summary>
+            SME-to-SME protocol. For the straightforward case of simple MS-to-SC short message
+            transfer. No interworking is performed.
+            </summary>
+            <remarks>
+            If this value is specified in an SMS-DELIVER PDU, the value
+            indicates the SM-AL protocol being used between the SME and the MS.
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.ProtocolID.Interworking">
+             <summary>
+             Telematic interworking.
+             </summary>
+             <remarks>
+             <para>If an interworking protocol is specified in an SMS-SUBMIT PDU,
+             it indicates that the SME is a telematic device of the specified type,
+             and requests the SC to convert the SM into a form suited for that
+             device type. If the destination network is ISDN, the SC must also
+             select the proper service indicators for connecting to a device of
+             that type.</para>
+            
+             <para>If an interworking protocol is specified in an SMS-DELIVER PDU,
+             it indicates that the SME is a telematic device of the specified type.
+             </para>
+             </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Implicit">
+            <summary>
+            Implicit - device type is specific to this SC, or can be
+            concluded on the basis of the address
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Telex">
+            <summary>Telex (or teletex reduced to telex format)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Group3Telefax">
+            <summary>Group 3 Telefax</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Group4Telefax">
+            <summary>Group 4 Telefax</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.VoiceTelephone">
+            <summary>Voice Telephone (i.e. conversion to speech)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Ermes">
+            <summary>ERMES (European Radio Messaging System)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.PagingSystem">
+            <summary>National Paging System (known to the SC)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.VideoTex">
+            <summary>Videotex (T.100/T.101)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Teletex">
+            <summary>Teletex, carrier unspecified</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.TeletexPSPDN">
+            <summary>Teletex, in PSPDN</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.TeletexCSPDN">
+            <summary>Teletex, in CSPDN</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.TeletexPSTN">
+            <summary>Teletex, in analog PSTN</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.TeletexISDN">
+            <summary>Teletex, in digital ISDN</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Uci">
+            <summary>UCI (Universal Computer Interface, ETSI DE/PS 3 01-3)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved0E">
+            <summary>Reserved (0x0E)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved0F">
+            <summary>Reserved (0x0F)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.MessageHandler">
+            <summary>A message handling facility (known to the SC)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.X400BasedHandler">
+            <summary>Any public X.400-based message handling system</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.InternetEMail">
+            <summary>Internet Electronic Mail</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved13">
+            <summary>Reserved (0x13)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved14">
+            <summary>Reserved (0x14)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved15">
+            <summary>Reserved (0x15)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved16">
+            <summary>Reserved (0x16)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.Reserved17">
+            <summary>Reserved (0x17)</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific1">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific2">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific3">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific4">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific5">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific6">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.SCSpecific7">
+            <summary>
+            Value specific to each SC, usage based on mutual agreement
+            between the SME and the SC
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.Interworking.GsmMobileStation">
+            <summary>
+            A GSM mobile station. The SC converts the SM from the received
+            TP-DCS to any data coding scheme supported by that MS (e.g. the
+            default).
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.ProtocolID.NetworkUse">
+            <summary>
+            For network use
+            </summary>
+            <remarks>
+            Details are written in the remarks section of the types.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ShortMessageType0">
+            <summary>Short Message Type 0</summary>
+            <remarks>A <b>Short Message Type 0</b> indicates that the ME must
+            acknowledge receipt of the short message but may discard its contents.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1">
+             <summary>Replace Short Message Type 1</summary>
+             <remarks>
+             <para>The <b>Replace Short Message</b> feature is optional for the ME and
+             the SIM but if implemented it shall be performed as described here.</para>
+            
+             <para>For MT short messages, on receipt of a short message from from
+             the SC, the MS shall check to see if the associated Protocol
+             Identifier contains a Replace Short Message Type code.</para>
+            
+             <para>If such a code is present, the the MS will check the originating
+             address and replace any existing stored message having the same
+             Protocol Identifier code and originating address with the new
+             short message and other parameter values. If there is no message
+             to be replaced, the MS shall store the message in the normal way.
+             The MS may also check the SC address as well as the Originating
+             Address. However, in a network which has multiple SCs, it is
+             possible for a Replace Message type for a SM to be sent via
+             different SCs and so it is recommended that the SC address
+             should not be checked by the MS unless the application
+             specifically requires such a check.</para>
+            
+             <para>If a Replace Short Message Type code is not present then the MS
+             will will store the message in the normal way.</para>
+            
+             <para>In MO short messages the SC reacts similarly but only the address
+             of the originating MS or any other source is checked.</para>
+             </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType2">
+            <summary>Replace Short Message Type 2</summary>
+            <remarks>
+            The <b>Replace Short Message</b> feature is optional for the ME and
+            the SIM but if implemented it shall be performed as described
+            in the remarks section of <see cref="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1"/>.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType3">
+            <summary>Replace Short Message Type 3</summary>
+            <remarks>
+            The <b>Replace Short Message</b> feature is optional for the ME and
+            the SIM but if implemented it shall be performed as described
+            in the remarks section of <see cref="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1"/>.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType4">
+            <summary>Replace Short Message Type 4</summary>
+            <remarks>
+            The <b>Replace Short Message</b> feature is optional for the ME and
+            the SIM but if implemented it shall be performed as described
+            in the remarks section of <see cref="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1"/>.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType5">
+            <summary>Replace Short Message Type 5</summary>
+            <remarks>
+            The <b>Replace Short Message</b> feature is optional for the ME and
+            the SIM but if implemented it shall be performed as described
+            in the remarks section of <see cref="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1"/>.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType6">
+            <summary>Replace Short Message Type 6</summary>
+            <remarks>
+            The <b>Replace Short Message</b> feature is optional for the ME and
+            the SIM but if implemented it shall be performed as described
+            in the remarks section of <see cref="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1"/>.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType7">
+            <summary>Replace Short Message Type 7</summary>
+            <remarks>
+            The <b>Replace Short Message</b> feature is optional for the ME and
+            the SIM but if implemented it shall be performed as described
+            in the remarks section of <see cref="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReplaceShortMessageType1"/>.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.ReturnCallMessage">
+            <summary>
+            Return Call Message
+            </summary>
+            <remarks>
+            A <b>Return Call Message</b> indicates to the MS to inform the user
+            that a call (e.g. a telephone call) can be established to the
+            address specified within the TP-OA. The RP-OA contains the address
+            of the SC as usual. The message content (if present) gives
+            displayable information (e.g. the number of waiting voice messages).
+            The message is handled in the same way as all other messages of
+            the Replace Short Message Types.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.MEDataDownload">
+            <summary>
+            ME Data Download
+            </summary>
+            <remarks>
+            <b>ME Data Download</b> is facility whereby the ME shall process the
+            short message in its entirety including all SMS elements
+            contained in the SMS deliver to the ME. The DCS shall be set to
+            message class 1. The entire user data field is available for ME
+            Data Download.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.MEDepersonalization">
+            <summary>
+            ME De-personalization Short Message
+            </summary>
+            <remarks>
+            <b>The ME De-personalization Short Message</b> is an ME-specific
+            message which instructs the ME to de-personalize the ME (see
+            GSM 2.22). The TP-DCS shall be set to Uncompressed, Default
+            Alphabet, and Message Class 1 (Me-specific), which corresponds
+            to a bit coding og 00010001. The TP-UD field contains
+            de-personalization information coded according to GSM 02.22.
+            This information shall not be displayed by an ME which supports
+            the scheme. The acknowledgement to this message is a
+            SMS-DELIVER-REPORT for RP-ACK in ehich the TP-User-Data shall be
+            coded according to GSM 02.22.
+            </remarks>
+        </member>
+        <member name="F:GsmComm.PduConverter.ProtocolID.NetworkUse.SIMDataDownload">
+            <summary>
+            SIM Data Download
+            </summary>
+            <remarks>
+            <b>SIM Data Download</b> is a facility whereby the ME must pass the
+            short message in its entirety including all SMS elements
+            contained in the SMS deliver to the SIM using the mechanism
+            descriped in GSM 11.11. The DCS shall be set to 8 bit message
+            class 2 (either bit coding 11110110 or 00010110). The entire
+            user data field is available for SIM Data Download.
+            </remarks>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory">
+            <summary>
+            Creates messages based on Nokia's Smart Messaging specification.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CalcNextRefNumber">
+            <summary>
+            Calculates the next reference number.
+            </summary>
+            <remarks>Returns the current number and then increments it by one.
+            If the new number would exceed 255, it it reset to 1.</remarks>
+            <returns>The next reference number.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateConcatTextMessage(System.String,System.String)">
+            <summary>
+            Creates a concatenated text message.
+            </summary>
+            <param name="userDataText">The message text.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <returns>A set of <see cref="T:GsmComm.PduConverter.SmsPdu"/> objects that represent the message.</returns>
+            <remarks><para>The userDataText is converted to the 7-bit default alphabet automatically. The resulting
+            string must not exceed 160 characters. Therefore, if 7-bit characters occupy more than
+            one character, the userDataText must be shorter than 160 characters.</para>
+            <para>If no concatenation is necessary, the <see cref="T:GsmComm.PduConverter.SmsPdu"/> class handles the encoding
+            as if it was used directly.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentException"><para>userDataText is so long that it would create more than 255 message parts.</para></exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateConcatTextMessage(System.String,System.String,System.String)">
+            <summary>
+            Creates a concatenated text message.
+            </summary>
+            <param name="userDataText">The message text.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <param name="smscAddress">The service center (SMSC) address. Can be an empty string.</param>
+            <returns>A set of <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> objects that represent the message.</returns>
+            <remarks><para>The userDataText is converted to the GSM 7-bit default alphabet automatically.</para>
+            <para>If no concatenation is necessary, the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class handles the encoding
+            as if it was used directly.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentException"><para>userDataText is so long that it would create more than 255 message parts.</para></exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateConcatUnicodeTextMessage(System.String,System.String)">
+            <summary>
+            Creates a concatenated Unicode text message.
+            </summary>
+            <param name="userDataText">The message text.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <returns>A set of <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> objects that represent the message.</returns>
+            <remarks><para>The userDataText is converted to UCS2 (Unicode) automatically.</para>
+            <para>If no concatenation is necessary, the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class handles the encoding
+            as if it was used directly.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentException"><para>userDataText is so long that it would create more than 255 message parts.</para></exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateConcatUnicodeTextMessage(System.String,System.String,System.String)">
+            <summary>
+            Creates a concatenated Unicode text message.
+            </summary>
+            <param name="userDataText">The message text.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <param name="smscAddress">The service center (SMSC) address. Can be an empty string.</param>
+            <returns>A set of <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> objects that represent the message.</returns>
+            <remarks><para>The userDataText is converted to UCS2 (Unicode) automatically.</para>
+            <para>If no concatenation is necessary, the <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> class handles the encoding
+            as if it was used directly.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentException"><para>userDataText is so long that it would create more than 255 message parts.</para></exception>
+        </member>
+        <member name="F:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.EmptyOperatorLogo">
+            <summary>
+            Represents an empty operator logo that can be used to remove an operator logo.
+            It depends on the phone model whether it works.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateOperatorLogo(GsmComm.PduConverter.SmartMessaging.OtaBitmap,System.String,System.String)">
+            <summary>
+            Creates an operator logo.
+            </summary>
+            <param name="otaBitmap">The OTA bitmap to use as the logo. Maximum size is 72x14 pixels.</param>
+            <param name="mobileCountryCode">MCC. The operator's country code. Must be 3 digits long.</param>
+            <param name="mobileNetworkCode">MNC. The operator's network code. Must be 2 digits long.</param>
+            <returns>A byte array containing the generated operator logo.</returns>
+            <exception cref="T:System.ArgumentNullException">otaBitmap is null.</exception>
+            <exception cref="T:System.ArgumentException"><para>mobileCountryCode is not 3 digits long.</para><para> -or- </para>
+            <para>mobileNetworkCode is not 2 digits long.</para>
+            <para> -or- </para><para>The bitmap is larger than 72x14 pixels.</para>
+            </exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateOperatorLogoMessage(System.Byte[],System.String,System.String)">
+            <summary>
+            Creates an operator logo message.
+            </summary>
+            <param name="operatorLogo">The operator logo. Use <see cref="M:GsmComm.PduConverter.SmartMessaging.SmartMessageFactory.CreateOperatorLogo(GsmComm.PduConverter.SmartMessaging.OtaBitmap,System.String,System.String)"/> to create one.</param>
+            <param name="destinationAddress">The message's destination address.</param>
+            <param name="smscAddress">The service center (SMSC) address. Can be an empty string.</param>
+            <returns>A set of <see cref="T:GsmComm.PduConverter.SmsSubmitPdu"/> objects that represent the message.</returns>
+            <exception cref="T:System.ArgumentNullException">operatorLogo is null.</exception>
+            <exception cref="T:System.ArgumentException"><para>operatorLogo is an empty array.</para>
+            <para> -or- </para><para>destinationAddress is an empty string.</para>
+            <para> -or- </para><para>operatorLogo is so big that it would create more than 255 message parts.</para></exception>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsTimestamp">
+            <summary>
+            For TP-SCTS and all other timestamps that look the same.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.SmsTimestamp.None">
+            <summary>
+            The value for an invalid or not present timestamp.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.#ctor(System.String,System.Int32@)">
+            <summary>
+            Decodes the timestamp out of a PDU stream.
+            </summary>
+            <param name="pdu">The string to get the timestamp from.</param>
+            <param name="index">The current position in the string</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.#ctor(System.DateTime,System.Int32)">
+            <summary>
+            Creates the timestamp using a DateTime object and an offset.
+            </summary>
+            <param name="timestamp">The timestamp to initialize this object with.</param>
+            <param name="timeZoneOffset">The time zone offset for the specified timestamp.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.ToString">
+            <summary>
+            Returns the formatted date using DateTime of the current culture + the time zone offset.
+            </summary>
+            <returns>The formatted date string.</returns>
+            <remarks>
+            The returned string is useful for display but not for persistence because is uses
+            the currently active culture to format the string, which can cause problems when trying to parse
+            the persisted string. If you want to persist the timestamp, consider using
+            <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToSortableString"/> instead.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.ToString(System.Boolean)">
+            <summary>
+            Returns a formatted date string using DateTime of the current culture.
+            </summary>
+            <param name="includeTimeZoneOffset">Specify true to include the
+            time zone offset in the string, false if it should not be included.</param>
+            <returns>The formatted date string.</returns>
+            <remarks>
+            The returned string is useful for display but not for persistence because is uses
+            the currently active culture to format the string, which can cause problems when trying to parse
+            the persisted string. If you want to persist the timestamp, consider using
+            <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToSortableString"/> instead.
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.ToSortableString">
+            <summary>
+            Returns a formatted date using the sortable date/time pattern and the time zone.
+            </summary>
+            <returns>The formatted date string.</returns>
+            <remarks>The format is independent of the currently active culture and
+            is always "yyyy-MM-ddTHH:mm:sszzz". It is useful for persisting the timestamp value as text.
+            If you just want to display the value, consider using the <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToString"/> or
+            <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToString(System.Boolean)"/> methods instead.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.ToDateTime">
+            <summary>
+            Returns the timestamp as a <see cref="T:System.DateTime"/> object.
+            </summary>
+            <returns>The converted date object.</returns>
+            <remarks>
+            <para>The <see cref="T:System.DateTime"/> object does not hold the time zone offset,
+            this information will be lost when using this method. Use the
+            TimeZoneOffset-releated properties and methods for working with the
+            offset. If you just need the string representation, consider using the <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToString"/>,
+            <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToString(System.Boolean)"/> or <see cref="M:GsmComm.PduConverter.SmsTimestamp.ToSortableString"/> methods instead.
+            </para>
+            <para>
+            An <see cref="T:GsmComm.PduConverter.SmsTimestamp"/> saves its years only with two digits by design, <see cref="T:System.DateTime"/>
+            uses 4 digits. The following conversion is performed when converting from an
+            <see cref="T:GsmComm.PduConverter.SmsTimestamp"/> to a <see cref="T:System.DateTime"/>: If the year is equal or greater than 90,
+            then 1900 is added, otherwise 2000.
+            </para>
+            <para>
+            If there is an error during conversion, the constant <see cref="F:System.DateTime.MinValue"/>
+            is returned, no exception is thrown.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsTimestamp.CompareTo(System.Object)">
+            <summary>
+            Compares this instance to a specified object and returns an indication of their relative values.
+            </summary>
+            <param name="value">An object to compare, or a null reference</param>
+            <returns>
+            <list type="bullet">
+            <item>less than zero = the instance is less than value.</item>
+            <item>zero = the instance is equal to value.</item>
+            <item>greater than zero = The instance is grater than value -or- value is a null reference.</item>
+            </list>
+            </returns>
+            <exception cref="T:System.ArgumentException">value is not an <see cref="T:GsmComm.PduConverter.SmsTimestamp"/>.</exception>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.Year">
+            <summary>
+            Gets the year.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.Month">
+            <summary>
+            Gets the month.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.Day">
+            <summary>
+            Gets the day.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.Hour">
+            <summary>
+            Gets the hour.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.Minute">
+            <summary>
+            Gets the minute.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.Second">
+            <summary>
+            Gets the second.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.TimeZoneOffset">
+            <summary>
+            Gets the time zone offset as an integer.
+            </summary>
+            <remarks>One unit of this offset equals 15 minutes. If you don't need this actual value,
+            consider using <see cref="P:GsmComm.PduConverter.SmsTimestamp.TimeZoneOffsetSpan"/> instead.</remarks>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.TimeZoneOffsetString">
+            <summary>
+            Gets the time zone offset as a string.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.TimeZoneOffsetSpan">
+            <summary>
+            Gets the time zone offset as a time span.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsTimestamp.TimeZoneOffsetSortableString">
+            <summary>
+            Gets the time zone offset as a string useful to append to the sortable date string.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.ValidityPeriodFormat">
+            <summary>
+            Specifies how the validity period is formatted.
+            </summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ValidityPeriodFormat.Unspecified">
+            <summary>No validity is specified, the TP-VP block will not be specified.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ValidityPeriodFormat.Relative">
+            <summary>A relative validity is specified in the TP-VP block.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ValidityPeriodFormat.Absolute">
+            <summary>An absolute validity is specified in the TP-VP block.</summary>
+        </member>
+        <member name="F:GsmComm.PduConverter.ValidityPeriodFormat.Enhanced">
+            <summary>An enhanced validity is specified in the TP-VP block.</summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmsSubmitMessageFlags">
+            <summary>
+            Represents the the first octet of an SMS-SUBMIT-PDU.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitMessageFlags.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmsSubmitMessageFlags"/> class.
+            </summary>
+            <remarks>
+            Default settings are:
+            <list type="bullet">
+            <item><description>
+            ReplyPathExists = false
+            </description></item>
+            <item><description>
+            UserDataHeaderPresent = false
+            </description></item>
+            <item><description>
+            RequestStatusReport = false
+            </description></item>
+            <item><description>
+            ValidityPeriodFormat = ValidityPeriodFormat.Unspecified
+            </description></item>
+            <item><description>
+            RejectDuplicates = false
+            </description></item>
+            <item><description>
+            MessageType = OutgoingMessageType.SmsSubmit
+            </description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitMessageFlags.#ctor(System.Byte)">
+            <summary>
+            Initializes a new instance of the MessageFlags class with a
+            predefined data byte.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitMessageFlags.ToString">
+            <summary>
+            Returns the string equivalent of this instance.
+            </summary>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitMessageFlags.ToByte">
+            <summary>
+            Returns the byte equivalent of this instance.
+            </summary>
+            <returns>The byte value.</returns>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmsSubmitMessageFlags.FromByte(System.Byte)">
+            <summary>
+            Fills the object with values from the data byte.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitMessageFlags.MessageType">
+            <summary>
+            Gets the message type, always returns <see cref="F:GsmComm.PduConverter.OutgoingMessageType.SmsSubmit"/>.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitMessageFlags.RejectDuplicates">
+            <summary>
+            Gets or sets if the SC should reject duplicate messages.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitMessageFlags.ValidityPeriodFormat">
+            <summary>
+            Gets or sets the validity period format.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitMessageFlags.RequestStatusReport">
+            <summary>
+            Gets or sets if s status report should be requested.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitMessageFlags.UserDataHeaderPresent">
+            <summary>
+            Gets or sets if a user data header is present.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmsSubmitMessageFlags.ReplyPathExists">
+            <summary>
+            Gets or sets if a reply path exists.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement">
+            <summary>
+            Implements a Concatenated Short Message Information Element (8-bit reference number)
+            </summary>
+            <remarks>This element is used to indiate that a message is split into
+            multiple parts.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement.#ctor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement"/> class.
+            </summary>
+            <param name="referenceNumber">The message's reference number, must
+            be the same in all parts of the same message.</param>
+            <param name="totalMessages">The total number of parts of the message.</param>
+            <param name="currentNumber">The current message number.</param>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement.ToByteArray">
+            <summary>
+            Returns the byte array equivalent of this instance.
+            </summary>
+            <returns>The byte array.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement.ReferenceNumber">
+            <summary>
+            Gets the messages reference number.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement.TotalMessages">
+            <summary>
+            Gets the total number of parts of the message.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.ConcatMessageElement.CurrentNumber">
+            <summary>
+            Gets the current message number.
+            </summary>
+        </member>
+        <member name="T:GsmComm.PduConverter.SmartMessaging.PortAddressElement">
+            <summary>
+            Implements an Application Port Addressing Information Element (16 bit address).
+            </summary>
+            <remarks>This element is used to indiate from which port a message 
+            originated and to which port it should be directed to.</remarks>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.PortAddressElement.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.PduConverter.SmartMessaging.PortAddressElement"/> class.
+            </summary>
+            <param name="destinationPort">The destination port as 4 hex characters, e.g. "1582".</param>
+            <param name="originatorPort">The source port as 4 hex characters, e.g. "0000".</param>
+            <exception cref="T:System.ArgumentException">destinationPort or originatorPort is not 4 characters long or contains non-hex characters.</exception>
+        </member>
+        <member name="M:GsmComm.PduConverter.SmartMessaging.PortAddressElement.ToByteArray">
+            <summary>
+            Returns the byte array equivalent of this instance.
+            </summary>
+            <returns>The byte array.</returns>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.PortAddressElement.DestinationPort">
+            <summary>
+            Gets the destination port.
+            </summary>
+        </member>
+        <member name="P:GsmComm.PduConverter.SmartMessaging.PortAddressElement.OriginatorPort">
+            <summary>
+            Gets the originator port.
+            </summary>
+        </member>
+    </members>
+</doc>

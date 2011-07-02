@@ -1,0 +1,56 @@
+  <%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+<title>easygrass_template</title> 
+<style type="text/css"> 
+
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style> 
+<link href="css/19-1-10-1-14.css" rel="stylesheet" type="text/css" /> 
+</head> 
+ 
+<body> 
+    <form id="form1" runat="server">
+<div id="main"> 
+<div id="header" align="center">STUDENT MANAGEMENT SYSTEM</div> 
+<div id="banner"> 
+<div id="menupanel"> 
+<ul> 
+<li><a href="home.aspx">Home</a></li>
+                <li><a href="administration.aspx">Administration</a></li>
+                <li><a href="internal.aspx">Internals</a></li>
+                <li><a href="feespage.aspx">Accounts</a></li>
+                <li><a href="result.aspx" >Results</a></li>
+                <li><a href="datesheet.aspx">Datesheets</a></li>
+                <li><a href="Default12.aspx">Students</a>
+                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/home.aspx" 
+                        ForeColor="Black">Logout</asp:HyperLink>
+                </li>                   
+ 
+</ul> 
+</div> 
+ 
+</div> 
+<div id="content"> 
+  <div class="col1" align="center"><br /> 
+      <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+      </asp:ContentPlaceHolder>
+  </div> 
+ 
+</div> 
+<div id="footer"><br /> 
+&copy; 2008. All Rights Reserved. </div> 
+ 
+ 
+ 
+</div> 
+    </form>
+</body> 
+</html> 

@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GSMCommServer</name>
+    </assembly>
+    <members>
+        <member name="T:GsmComm.Server.MessageSendEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.Server.SmsSender.MessageSendStarting"/> and <see cref="E:GsmComm.Server.SmsSender.MessageSendComplete"/>
+            events.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="e">The <see cref="T:GsmComm.Server.MessageSendEventArgs"/> associated with the event.</param>
+        </member>
+        <member name="T:GsmComm.Server.MessageSendErrorEventHandler">
+            <summary>
+            The method that handles the <see cref="E:GsmComm.Server.SmsSender.MessageSendFailed"/> event.
+            </summary>
+            <param name="sender">The origin of the event.</param>
+            <param name="e">The <see cref="T:GsmComm.Server.MessageSendErrorEventArgs"/> associated with the event.</param>
+        </member>
+        <member name="T:GsmComm.Server.MessageSendEventArgs">
+            <summary>
+            Provides data for the events that deal with message sending.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.MessageSendEventArgs.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.Server.MessageSendEventArgs"/>.
+            </summary>
+            <param name="message">The message that is being sent or was sent.</param>
+            <param name="destination">The destination the message is being or was sent to.</param>
+        </member>
+        <member name="M:GsmComm.Server.MessageSendEventArgs.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.Server.MessageSendEventArgs"/>.
+            </summary>
+            <param name="message">The message that is being sent or was sent.</param>
+            <param name="destination">The destination the message is being or was sent to.</param>
+            <param name="userName">The name of the user from which the action started.</param>
+        </member>
+        <member name="P:GsmComm.Server.MessageSendEventArgs.Message">
+            <summary>
+            Gets the message that is being sent or was sent.
+            </summary>
+        </member>
+        <member name="P:GsmComm.Server.MessageSendEventArgs.Destination">
+            <summary>
+            Gets the destination the message is being or was sent to.
+            </summary>
+        </member>
+        <member name="P:GsmComm.Server.MessageSendEventArgs.UserName">
+            <summary>
+            Gets the user name from which the action started.
+            </summary>
+        </member>
+        <member name="T:GsmComm.Server.MessageSendErrorEventArgs">
+            <summary>
+            Provides data for the error events that deal with message sending.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.MessageSendErrorEventArgs.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.Server.MessageSendErrorEventArgs"/>.
+            </summary>
+            <param name="message">The message that failed sending.</param>
+            <param name="destination">The destination the message was attempted to send to.</param>
+            <param name="exception">The exception that caused the error.</param>
+        </member>
+        <member name="M:GsmComm.Server.MessageSendErrorEventArgs.#ctor(System.String,System.String,System.Exception,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.Server.MessageSendErrorEventArgs"/>.
+            </summary>
+            <param name="message">The message that failed sending.</param>
+            <param name="destination">The destination the message was attempted to send to.</param>
+            <param name="exception">The exception that caused the error.</param>
+            <param name="userName">The name of the user from which the action started.</param>
+        </member>
+        <member name="P:GsmComm.Server.MessageSendErrorEventArgs.Exception">
+            <summary>
+            Gets the exception that caused the error.
+            </summary>
+        </member>
+        <member name="T:GsmComm.Server.SmsSender">
+            <summary>
+            Implements a remotable object to send SMS messages.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.SmsSender.#ctor(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GsmComm.Server.SmsSender"/> class.
+            </summary>
+            <param name="portNumber">The COM port number to connect to.</param>
+            <param name="baudRate">The baud rate to use.</param>
+            <param name="timeout">The communictaion timeout.</param>
+        </member>
+        <member name="M:GsmComm.Server.SmsSender.Shutdown">
+            <summary>
+            Stops the SMS sender and releases its resources.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.SmsSender.InitializeLifetimeService">
+            <summary>
+            Determines how long the remoting object lives.
+            </summary>
+            <returns>Always null so that the object lives forever.</returns>
+        </member>
+        <member name="M:GsmComm.Server.SmsSender.SendMessage(System.String,System.String)">
+            <summary>
+            Sends an SMS message.
+            </summary>
+            <param name="message">The message to send.</param>
+            <param name="destination">The destination (phone number) to which the message should be sent.</param>
+        </member>
+        <member name="M:GsmComm.Server.SmsSender.SendMessage(System.String,System.String,System.Boolean)">
+            <summary>
+            Sends an SMS message.
+            </summary>
+            <param name="message">The message to send.</param>
+            <param name="destination">The destination (phone number) to which the message should be sent.</param>
+            <param name="unicode">Specifies if the message should be sent as Unicode.</param>
+        </member>
+        <member name="E:GsmComm.Server.SmsSender.MessageSendStarting">
+            <summary>
+            The event that occurs immediately before transferring a new message.
+            </summary>
+        </member>
+        <member name="E:GsmComm.Server.SmsSender.MessageSendComplete">
+            <summary>
+            The event that occurs after a successful message transfer.
+            </summary>
+        </member>
+        <member name="E:GsmComm.Server.SmsSender.MessageSendFailed">
+            <summary>
+            The event that occurs after a failed message transfer.
+            </summary>
+        </member>
+        <member name="T:GsmComm.Server.SmsServer">
+            <summary>
+            Implements a server for sending SMS messages remotely.
+            </summary>
+            <remarks>
+            <para>The server uses .NET remoting with a TCP channel to publish an <see cref="T:GsmComm.Server.SmsSender"/> object.</para>
+            <para>After starting, the server can be accessed by default at <b>tcp://(servername):2000/SMSSender</b>.</para>
+            </remarks>
+        </member>
+        <member name="M:GsmComm.Server.SmsServer.#ctor">
+            <summary>
+            Initializes a new instance of the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.SmsServer.Finalize">
+            <summary>
+            Finalizes the class.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.SmsServer.Start">
+            <summary>
+            Starts the server.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Server is already running.</exception>
+        </member>
+        <member name="M:GsmComm.Server.SmsServer.Stop">
+            <summary>
+            Stops the server.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Server is not running.</exception>
+        </member>
+        <member name="M:GsmComm.Server.SmsServer.IsRunning">
+            <summary>
+            Tells if the remoting server is currently running.
+            </summary>
+            <returns>true if the server is running, false otherwise.</returns>
+        </member>
+        <member name="M:GsmComm.Server.SmsServer.Dispose">
+            <summary>
+            Disposes of the host.
+            </summary>
+        </member>
+        <member name="E:GsmComm.Server.SmsServer.MessageSendStarting">
+            <summary>
+            The event that occurs immediately before transferring a new message.
+            </summary>
+        </member>
+        <member name="E:GsmComm.Server.SmsServer.MessageSendComplete">
+            <summary>
+            The event that occurs after a successful message transfer.
+            </summary>
+        </member>
+        <member name="E:GsmComm.Server.SmsServer.MessageSendFailed">
+            <summary>
+            The event that occurs after a failed message transfer.
+            </summary>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.PortNumber">
+            <summary>
+            Gets or sets the COM port number where the phone is connected.
+            </summary>
+            <remarks>If this property is changed, while the server is running, the server must be restarted.</remarks>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.BaudRate">
+            <summary>
+            Gets or sets the baud rate to use when communicating with the phone.
+            </summary>
+            <remarks>If this property is changed, while the server is running, the server must be restarted.</remarks>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.Timeout">
+            <summary>
+            Gets or sets the timeout when communicating with the phone.
+            </summary>
+            <remarks>If this property is changed, while the server is running, the server must be restarted.</remarks>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.NetworkPort">
+            <summary>
+            Gets or sets the network port for the SMS server to listen for requests.
+            </summary>
+            <remarks>If this property is changed, while the server is running, the server must be restarted.</remarks>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.Uri">
+            <summary>
+            Gets or sets the URI under which the SMS sender is available.
+            </summary>
+            <remarks>If this property is changed, while the server is running, the server must be restarted.</remarks>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.IsSecured">
+            <summary>
+            Gets or sets a value that indicates whether security is enabled for the server.
+            </summary>
+            <remarks>
+            <para>When security is enabled, only user identities authenticated by Windows are allowed to
+            connect to the server and the communication between server and client is encrypted.
+            Clients must also have security enabled to be able to connect to the server.</para>
+            <para>Additionally, access may be allowed or denied for specific users when in secure mode.
+            This is currently determined by the <see cref="P:GsmComm.Server.SmsServer.AllowAnonymous"/> property that specifies whether
+            anonymous users can connect or not.</para>
+            <para>If this property is changed, while the server is running, the server must be restarted.</para>
+            </remarks>
+        </member>
+        <member name="P:GsmComm.Server.SmsServer.AllowAnonymous">
+            <summary>
+            Gets or sets whether anonymous users can connect when the server is secured.
+            </summary>
+            <remarks>If this property is changed, while the server is running, the server must be restarted.</remarks>
+        </member>
+        <member name="T:GsmComm.Server.AuthorizationModule">
+            <summary>
+            Implements the authorization module for the server.
+            </summary>
+        </member>
+        <member name="M:GsmComm.Server.AuthorizationModule.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the module.
+            </summary>
+            <param name="allowAnonymous">Specifies if users authenticated anonymously can
+            connect to the current channel.</param>
+        </member>
+        <member name="M:GsmComm.Server.AuthorizationModule.IsConnectingEndPointAuthorized(System.Net.EndPoint)">
+            <summary>
+            Gets a Boolean value that indicates whether the network address of the client is
+            authorized to connect on the current channel. 
+            </summary>
+            <param name="endPoint">The <see cref="T:System.Net.EndPoint"/> that identifies the network address of the client.</param>
+            <returns>true if the network address of the client is authorized; otherwise, false.</returns>
+        </member>
+        <member name="M:GsmComm.Server.AuthorizationModule.IsConnectingIdentityAuthorized(System.Security.Principal.IIdentity)">
+            <summary>
+            Gets a Boolean value that indicates whether the user identity of the client is
+            authorized to connect on the current channel. 
+            </summary>
+            <param name="identity">The <see cref="T:System.Security.Principal.IIdentity"/> that represents the user identity of the client.</param>
+            <returns>true if the user identity of the client is authorized; otherwise, false.</returns>
+        </member>
+    </members>
+</doc>
